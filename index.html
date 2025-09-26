@@ -14,7 +14,7 @@
       gtag('config', 'G-798CJCLWDZ');
     </script>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="./IMG_0920.png">
+    <link rel="icon" type="image/png" href="./IMG_0924.png">
     <!-- SEO Meta Tags -->
     <title>JFT Simulation Exam - Free Online Practice Test for Japanese Language Proficiency</title>
     <meta name="description" content="Prepare for your JFT exam with our free online simulation test. Practice with real exam-like questions and improve your Japanese language proficiency." />
@@ -57,11 +57,11 @@
             padding: 0 20px;
         }
         
-        /* Header Styles */
+        /* Header Styles - UPDATED FOR LARGER LOGO */
         header {
             background: linear-gradient(135deg, #3a86ff, #2667cc);
             color: white;
-            padding: 1rem 0;
+            padding: 1.5rem 0; /* Increased padding */
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
@@ -72,18 +72,40 @@
         }
         
         .logo {
-            font-size: 1.8rem;
+            font-size: 2rem; /* Larger font */
             font-weight: 700;
             display: flex;
             align-items: center;
+            gap: 15px; /* More space between logo and text */
         }
         
         .logo-img {
-            height: 45px;
+            height: 70px; /* MUCH LARGER - increased from 45px to 70px */
             width: auto;
-            margin-right: 12px;
-            border-radius: 4px;
-            border: 2px solid white;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            border: 3px solid white; /* Thicker border */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* More prominent shadow */
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.08);
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        
+        .logo-main {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .logo-sub {
+            font-size: 1rem;
+            opacity: 0.9;
         }
         
         .nav-links {
@@ -102,6 +124,7 @@
             transition: all 0.3s ease;
             padding: 0.5rem 0;
             border-bottom: 2px solid transparent;
+            font-size: 1.1rem; /* Slightly larger nav links */
         }
         
         .nav-links a:hover {
@@ -277,13 +300,13 @@
         }
         
         .intro h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem; /* Slightly larger */
             margin-bottom: 1rem;
             color: #2667cc;
         }
         
         .intro p {
-            font-size: 1.1rem;
+            font-size: 1.2rem; /* Slightly larger */
             color: #666;
             max-width: 700px;
             margin: 0 auto;
@@ -299,7 +322,7 @@
         
         .exam-btn {
             padding: 1.5rem;
-            font-size: 1.2rem;
+            font-size: 1.3rem; /* Slightly larger */
             background: linear-gradient(135deg, #3a86ff, #8338ec);
             color: white;
             border: none;
@@ -311,11 +334,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 120px;
+            min-height: 130px; /* Slightly taller */
         }
         
         .exam-btn i {
-            font-size: 2rem;
+            font-size: 2.5rem; /* Larger icons */
             margin-bottom: 10px;
         }
         
@@ -353,6 +376,7 @@
             color: white;
             text-decoration: none;
             transition: color 0.3s ease;
+            font-size: 1.1rem; /* Slightly larger */
         }
         
         .footer-links a:hover {
@@ -360,22 +384,35 @@
         }
         
         .creator {
-            font-size: 0.9rem;
+            font-size: 1rem; /* Slightly larger */
             color: #adb5bd;
         }
         
-        /* Mobile responsive */
+        /* Mobile responsive - UPDATED FOR LARGER LOGO */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
             }
             
             .logo-img {
-                height: 38px;
+                height: 55px; /* Still larger on mobile */
             }
             
             .logo {
+                font-size: 1.6rem;
+                gap: 10px;
+            }
+            
+            .logo-main {
                 font-size: 1.5rem;
+            }
+            
+            .logo-sub {
+                font-size: 0.9rem;
+            }
+            
+            header {
+                padding: 1rem 0;
             }
             
             .service-list {
@@ -399,11 +436,24 @@
                 flex-direction: column;
                 text-align: center;
             }
+            
+            .intro h1 {
+                font-size: 2.2rem;
+            }
+            
+            .intro p {
+                font-size: 1.1rem;
+            }
         }
 
-        /* Debug border for image */
-        .debug-border {
-            border: 2px solid red !important;
+        /* Loading animation for logo */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        .logo-img {
+            animation: fadeIn 1s ease-out;
         }
     </style>
 </head>
@@ -412,9 +462,12 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <!-- Logo ပုံထည့်သွင်းထားသည် -->
-                    <img src="./IMG_0932.png" alt="JFT Exam Preparation Logo" class="logo-img debug-border">
-                    <span>JFT Exam Preparation</span>
+                    <!-- LARGER LOGO -->
+                    <img src="./IMG_0932.png" alt="JFT Exam Preparation Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-main">JFT Exam Preparation</span>
+                        <span class="logo-sub">Japanese Language Test</span>
+                    </div>
                 </div>
                 <ul class="nav-links">
                     <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
@@ -602,15 +655,14 @@ The JFT (Japanese Language Test) is designed to measure the Japanese language pr
                 }
             });
 
-            // Debug: Check if image loads
+            // Logo loading success message
             const logoImg = document.querySelector('.logo-img');
-            logoImg.onerror = function() {
-                console.log('Image failed to load: ' + this.src);
-                alert('ပုံမတွေ့ပါ! File path ကိုစစ်ဆေးပါ။');
-            };
             logoImg.onload = function() {
-                console.log('Image loaded successfully: ' + this.src);
-                this.classList.remove('debug-border');
+                console.log('✅ Logo loaded successfully: ' + this.src);
+            };
+            logoImg.onerror = function() {
+                console.log('❌ Logo failed to load: ' + this.src);
+                alert('Logo ပုံမတွေ့ပါ! File path ကိုစစ်ဆေးပါ။');
             };
         });
     </script>
