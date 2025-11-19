@@ -13,6 +13,245 @@
 </script>
   <title>JFT-Basic Exam</title>
 <style>
+  /* Back to Home Button - Beautiful Design Only */
+        .back-home-section {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-home-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .back-home-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px 35px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: 2px solid transparent;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .back-home-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .back-home-btn:hover::before {
+            left: 100%;
+        }
+        
+        .back-home-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .back-home-btn:hover::after {
+            opacity: 1;
+        }
+        
+        .back-home-btn:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.6);
+            border-color: rgba(255,255,255,0.5);
+        }
+        
+        .back-home-btn i {
+            margin-right: 12px;
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .back-home-btn:hover i {
+            transform: translateX(-5px) scale(1.2);
+        }
+        
+        .back-home-text {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .back-home-subtitle {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Floating particles effect */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Your existing header code here -->
+    <header>
+        <!-- Your header content -->
+    </header>
+    
+    <main class="container">
+        <!-- Beautiful Back to Home Button Section -->
+        <div class="back-home-section">
+            <div class="particles" id="particles"></div>
+            <a href="index.html" class="back-home-btn">
+                <i class="fas fa-home"></i>
+                <span class="back-home-text">Home သို့ ပြန်ရန်</span>
+            </a>
+            <div class="back-home-subtitle">
+                စာမေးပွဲများ စာရင်းသို့ ပြန်သွားရန်
+            </div>
+        </div>
+        
+        <!-- Your existing exam content here -->
+        <div class="exam-container">
+            <!-- Your exam questions and content -->
+        </div>
+    </main>
+    
+    <!-- Your existing footer code here -->
+    <footer>
+        <!-- Your footer content -->
+    </footer>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 15;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random position
+                const left = Math.random() * 100;
+                const delay = Math.random() * 6;
+                const duration = 4 + Math.random() * 4;
+                
+                particle.style.left = left + '%';
+                particle.style.animationDelay = delay + 's';
+                particle.style.animationDuration = duration + 's';
+                
+                // Random size
+                const size = 2 + Math.random() * 4;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // Random opacity
+                particle.style.opacity = 0.3 + Math.random() * 0.4;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+        });
+        
+        // Add click sound effect (optional)
+        function playClickSound() {
+            // You can add a subtle click sound here if desired
+            console.log('Home button clicked!');
+        }
+        
+        // Add this to your existing back home button
+        document.querySelector('.back-home-btn').addEventListener('click', function(e) {
+            playClickSound();
+            // Optional: Add a smooth page transition
+            e.preventDefault();
+            document.body.style.opacity = '0.8';
+            document.body.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                window.location.href = this.href;
+            }, 300);
+        });
     body {
       font-family: sans-serif;
       padding: 20px;
@@ -1423,6 +1662,7 @@ Read the dialog and choose the phrase that fits the most.</strong></p>
 </script>
 </body>
 </html>
+
 
 
 
