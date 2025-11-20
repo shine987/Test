@@ -4,15 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-798CJCLWDZ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-798CJCLWDZ');
-</script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-798CJCLWDZ');
+  </script>
   <title>JFT-Basic Exam</title>
-<style>
+  <style>
+    /* Back to Home Button Styles */
+    .back-home-btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 8px 15px;
+      background-color: #6c757d;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      z-index: 1001;
+      transition: background-color 0.3s;
+    }
+
+    .back-home-btn:hover {
+      background-color: #5a6268;
+      color: white;
+      text-decoration: none;
+    }
+
     body {
       font-family: sans-serif;
       padding: 20px;
@@ -205,7 +225,7 @@
     .timer-container {
       position: fixed;
       top: 10px;
-      left: 50%;
+      left: calc(50% + 50px);
       transform: translateX(-50%);
       display: flex;
       align-items: center;
@@ -395,6 +415,17 @@
       .top-question-nav {
         padding: 4px 6px;
       }
+      
+      .back-home-btn {
+        top: 5px;
+        left: 5px;
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      
+      .timer-container {
+        left: calc(50% + 40px);
+      }
     }
 
     @media (max-width: 360px) {
@@ -410,9 +441,13 @@
         padding: 4px 8px;
       }
     }
-</style>
+  </style>
 </head>
 <body>
+
+  <!-- Back to Home Button -->
+  <a href="index.html" class="back-home-btn">Back to Home</a>
+  
   <div class="timer-container" id="timerContainer">
     <span class="timer-label">Exam Time Remaining:</span>
     <div class="timer" id="timer">60:00</div>
@@ -1418,6 +1453,7 @@ Read the dialog and choose the phrase that fits the most.</strong></p>
 </script>
 </body>
 </html>
+
 
 
 
