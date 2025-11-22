@@ -1,59 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Main Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFT Premium</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="auth.js"></script>
-  <style>
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">JFT</div>
+        <div class="logo-text">JFT Premium <span class="premium-badge">PREMIUM</span></div>
+      </div>
+      <div class="user-info" id="userInfo">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div id="userEmail">Not logged in</div>
+      </div>
+    </header>
+    
+    <section class="hero">
+      <h1>Unlock Premium Content</h1>
+      <p>Access exclusive resources, tools, and insights designed to help you achieve your goals faster and more efficiently.</p>
+      <div id="loginStatus" class="status-message hidden"></div>
+    </section>
+    
+    <section class="login-section" id="loginSection">
+      <h2>Sign In to Access Premium Content</h2>
+      <div class="login-container">
+        <p>Use your Google account to sign in and verify your premium status.</p>
+        <div class="google-btn-container">
+          <div id="login"></div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="premium-section" id="premiumSection">
+      <h2><span class="premium-badge">PREMIUM</span> Exclusive Content</h2>
+      <p>As a premium member, you have access to these exclusive resources:</p>
+      
+      <div class="premium-cards">
+        <div class="premium-card">
+          <div class="card-icon">📊</div>
+          <h3 class="card-title">Advanced Analytics</h3>
+          <p class="card-description">Deep insights and data visualization tools to track your progress and optimize performance.</p>
+          <button class="btn btn-premium" onclick="go('premium1.html')">Access Now</button>
+        </div>
+        
+        <div class="premium-card">
+          <div class="card-icon">🎯</div>
+          <h3 class="card-title">Strategic Tools</h3>
+          <p class="card-description">Powerful planning and strategy development resources to help you reach your goals.</p>
+          <button class="btn btn-premium" onclick="go('premium2.html')">Access Now</button>
+        </div>
+        
+        <div class="premium-card">
+          <div class="card-icon">🚀</div>
+          <h3 class="card-title">Growth Resources</h3>
+          <p class="card-description">Exclusive content and methodologies designed to accelerate your growth and success.</p>
+          <button class="btn btn-premium" onclick="go('premium3.html')">Access Now</button>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 30px;">
+        <button class="btn btn-logout" onclick="logout()">Logout</button>
+      </div>
+    </section>
+    
+    <footer class="footer">
+      <p>© 2023 JFT Premium. All rights reserved.</p>
+    </footer>
+  </div>
 
-<h2>Main Page</h2>
+  <script src="auth.js"></script>
+  <script>
+    // Initialize Google Sign-In
+    window.onload = function() {
+      google.accounts.id.initialize({
+        client_id: "829805960678-liqs7785stnvuv2902ltrmsu63ah9lk6.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+        auto_select: false
+      });
 
-<div id="login"></div>
+      google.accounts.id.renderButton(
+        document.getElementById("login"),
+        { 
+          theme: "filled_blue", 
+          size: "large",
+          width: 250,
+          text: "signin_with",
+          shape: "pill"
+        }
+      );
 
-<script>
-window.onload = function() {
-  google.accounts.id.initialize({
-    client_id: "829805960678-liqs7785stnvuv2902ltrmsu63ah9lk6.apps.googleusercontent.com",
-    callback: handleCredentialResponse
-  });
+      // Check if user is already logged in
+      checkLoginStatus();
+    };
 
-  google.accounts.id.renderButton(
-    document.getElementById("login"),
-    { theme: "outline", size: "large" }
-  );
+    // Navigate to premium pages
+    function go(page) {
+      if (localStorage.getItem("isPremium") === "yes") {
+        window.location.href = page;
+      } else {
+        showStatus("You must be a PREMIUM user to access this content!", "error");
+      }
+    }
 
-  google.accounts.id.prompt(); // optional auto login
-};
-
-// Premium buttons
-function go(page) {
-  if (localStorage.getItem("isPremium") === "yes") {
-    window.location.href = page;
-  } else {
-    alert("You must be a PREMIUM user!");
-  }
-}
-</script>
-
-<hr>
-
-<h3>Premium Pages</h3>
-
-<button onclick="go('premium1.html')">Premium Page 1</button>
-<button onclick="go('premium2.html')">Premium Page 2</button>
-<button onclick="go('premium3.html')">Premium Page 3</button>
-<button onclick="logout()">Logout</button>
-
+    // Show status message
+    function showStatus(message, type) {
+      const statusElement = document.getElementById("loginStatus");
+      statusElement.textContent = message;
+      statusElement.classList.remove("hidden", "status-success", "status-error");
+      statusElement.classList.add(`status-${type}`);
+      
+      setTimeout(() => {
+        statusElement.classList.add("hidden");
+      }, 5000);
+    }
+  </script>
 </body>
 </html>
-
