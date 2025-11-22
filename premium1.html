@@ -1,12 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Premium Page 1</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Analytics | JFT Premium</title>
+  <link rel="stylesheet" href="style.css">
   <script src="premium-check.js"></script>
 </head>
-
 <body>
-<h2>Welcome Premium User</h2>
-<p>This is Premium Page 1 content.</p>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">JFT</div>
+        <div class="logo-text">JFT Premium <span class="premium-badge">PREMIUM</span></div>
+      </div>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div id="userEmail">User Email</div>
+      </div>
+    </header>
+    
+    <section class="hero">
+      <h1>Advanced Analytics</h1>
+      <p>Deep insights and data visualization tools to track your progress and optimize performance.</p>
+    </section>
+    
+    <section class="premium-section">
+      <h2><span class="premium-badge">PREMIUM</span> Analytics Dashboard</h2>
+      
+      <div class="premium-cards">
+        <div class="premium-card">
+          <div class="card-icon">📈</div>
+          <h3 class="card-title">Performance Metrics</h3>
+          <p class="card-description">Track key performance indicators and measure progress against your goals.</p>
+          <button class="btn btn-premium">View Metrics</button>
+        </div>
+        
+        <div class="premium-card">
+          <div class="card-icon">🔍</div>
+          <h3 class="card-title">Data Insights</h3>
+          <p class="card-description">Discover patterns and trends in your data with advanced analytics.</p>
+          <button class="btn btn-premium">Explore Insights</button>
+        </div>
+        
+        <div class="premium-card">
+          <div class="card-icon">📊</div>
+          <h3 class="card-title">Visual Reports</h3>
+          <p class="card-description">Generate comprehensive reports with interactive charts and graphs.</p>
+          <button class="btn btn-premium">Create Reports</button>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="index.html" class="btn">Back to Main</a>
+        <button class="btn btn-logout" onclick="logout()">Logout</button>
+      </div>
+    </section>
+    
+    <footer class="footer">
+      <p>© 2023 JFT Premium. All rights reserved.</p>
+    </footer>
+  </div>
 </body>
 </html>
