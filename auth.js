@@ -2,6 +2,10 @@
 function handleCredentialResponse(response) {
   const data = parseJwt(response.credential);
   localStorage.setItem("premiumUser", data.email);
+  
+  // Extract first letter for avatar
+  const firstLetter = data.name ? data.name.charAt(0).toUpperCase() : data.email.charAt(0).toUpperCase();
+  localStorage.setItem("userAvatar", firstLetter);
 
   // Premium users list
   const allowedPremium = [
@@ -11,13 +15,51 @@ function handleCredentialResponse(response) {
 
   if (allowedPremium.includes(data.email)) {
     localStorage.setItem("isPremium", "yes");
-    alert("Premium Login Successful!");
+    showStatus("Premium Login Successful!", "success");
   } else {
     localStorage.setItem("isPremium", "no");
-    alert("You are not a premium user.");
+    showStatus("You are not a premium user.", "error");
   }
 
-  location.reload();
+  checkLoginStatus();
+}
+
+// Check login status and update UI
+function checkLoginStatus() {
+  const isPremium = localStorage.getItem("isPremium");
+  const userEmail = localStorage.getItem("premiumUser");
+  const userAvatar = localStorage.getItem("userAvatar");
+  
+  if (userEmail) {
+    document.getElementById("userEmail").textContent = userEmail;
+    document.getElementById("userAvatar").textContent = userAvatar || "U";
+    
+    if (isPremium === "yes") {
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("premiumSection").classList.remove("hidden");
+      document.getElementById("loginStatus").classList.add("hidden");
+    } else {
+      document.getElementById("loginSection").classList.remove("hidden");
+      document.getElementById("premiumSection").classList.add("hidden");
+    }
+  } else {
+    document.getElementById("loginSection").classList.remove("hidden");
+    document.getElementById("premiumSection").classList.add("hidden");
+    document.getElementById("userEmail").textContent = "Not logged in";
+    document.getElementById("userAvatar").textContent = "U";
+  }
+}
+
+// Show status message
+function showStatus(message, type) {
+  const statusElement = document.getElementById("loginStatus");
+  statusElement.textContent = message;
+  statusElement.classList.remove("hidden", "status-success", "status-error");
+  statusElement.classList.add(`status-${type}`);
+  
+  setTimeout(() => {
+    statusElement.classList.add("hidden");
+  }, 5000);
 }
 
 // Decode JWT
@@ -29,6 +71,9 @@ function parseJwt(token) {
 function logout() {
   localStorage.removeItem("isPremium");
   localStorage.removeItem("premiumUser");
-  alert("Logged out!");
-  location.href = "index.html";
+  localStorage.removeItem("userAvatar");
+  showStatus("Successfully logged out!", "success");
+  setTimeout(() => {
+    checkLoginStatus();
+  }, 1500);
 }
