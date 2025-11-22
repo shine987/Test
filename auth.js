@@ -1,12 +1,12 @@
-﻿// Google Auth Initialization
+// Google login callback
 function handleCredentialResponse(response) {
   const data = parseJwt(response.credential);
-  localStorage.setItem("premiumUser", data.email); // save login email
+  localStorage.setItem("premiumUser", data.email);
 
-  // Allowed Premium Email List
+  // Premium users list
   const allowedPremium = [
-    "premium1@gmail.com",
-    "premium2@gmail.com"
+    "ooooshine1@gmail.com",
+    "ooooshine2@gmail.com"
   ];
 
   if (allowedPremium.includes(data.email)) {
@@ -20,12 +20,12 @@ function handleCredentialResponse(response) {
   location.reload();
 }
 
-// Decode JWT token
+// Decode JWT
 function parseJwt(token) {
   return JSON.parse(atob(token.split('.')[1]));
 }
 
-// Logout function
+// Logout
 function logout() {
   localStorage.removeItem("isPremium");
   localStorage.removeItem("premiumUser");
