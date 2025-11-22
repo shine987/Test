@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>Main Page</title>
@@ -21,8 +21,9 @@
 <div id="login"></div>
 
 <script>
+window.onload = function() {
   google.accounts.id.initialize({
-    client_id: "829805960678-liqs7785stnvuv2902ltrmsu63ah9lk6.apps.googleusercontent.com",
+    client_id: "YOUR_GOOGLE_CLIENT_ID",
     callback: handleCredentialResponse
   });
 
@@ -30,6 +31,18 @@
     document.getElementById("login"),
     { theme: "outline", size: "large" }
   );
+
+  google.accounts.id.prompt(); // optional auto login
+};
+
+// Premium buttons
+function go(page) {
+  if (localStorage.getItem("isPremium") === "yes") {
+    window.location.href = page;
+  } else {
+    alert("You must be a PREMIUM user!");
+  }
+}
 </script>
 
 <hr>
@@ -40,16 +53,6 @@
 <button onclick="go('premium2.html')">Premium Page 2</button>
 <button onclick="go('premium3.html')">Premium Page 3</button>
 <button onclick="logout()">Logout</button>
-
-<script>
-function go(page) {
-  if (localStorage.getItem("isPremium") === "yes") {
-    window.location.href = page;
-  } else {
-    alert("You must be a PREMIUM user!");
-  }
-}
-</script>
 
 </body>
 </html>
