@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Main Page</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="auth.js"></script>
+  <style>
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Main Page</h2>
+
+<div id="login"></div>
+
+<script>
+  google.accounts.id.initialize({
+    client_id: "829805960678-liqs7785stnvuv2902ltrmsu63ah9lk6.apps.googleusercontent.com",
+    callback: handleCredentialResponse
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById("login"),
+    { theme: "outline", size: "large" }
+  );
+</script>
+
+<hr>
+
+<h3>Premium Pages</h3>
+
+<button onclick="go('premium1.html')">Premium Page 1</button>
+<button onclick="go('premium2.html')">Premium Page 2</button>
+<button onclick="go('premium3.html')">Premium Page 3</button>
+<button onclick="logout()">Logout</button>
+
+<script>
+function go(page) {
+  if (localStorage.getItem("isPremium") === "yes") {
+    window.location.href = page;
+  } else {
+    alert("You must be a PREMIUM user!");
+  }
+}
+</script>
+
+</body>
+</html>
