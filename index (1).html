@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFT Premium</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="auth.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-crown"></i>
+        <h1>JFT Premium</h1>
+      </div>
+      <div id="user-info" class="user-info">
+        <!-- User info will be populated by JavaScript -->
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <h2>Exclusive Content for Premium Members</h2>
+          <p>Access premium JFT resources, tools, and insights</p>
+          <div id="login" class="login-container">
+            <!-- Google login button will be rendered here -->
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f8f9fa'/%3E%3Ccircle cx='200' cy='150' r='80' fill='%23e9ecef'/%3E%3Cpath d='M200,70 L220,130 L280,130 L230,165 L250,225 L200,190 L150,225 L170,165 L120,130 L180,130 Z' fill='%23ffd700'/%3E%3C/svg%3E" alt="Premium Access">
+        </div>
+      </section>
+
+      <section class="premium-section">
+        <h2>Premium Resources</h2>
+        <p class="section-subtitle">Exclusive content available only to premium members</p>
+        
+        <div class="premium-cards">
+          <div class="premium-card">
+            <div class="card-icon">
+              <i class="fas fa-book-open"></i>
+            </div>
+            <h3>JFT Resource 1</h3>
+            <p>Comprehensive guide and materials for JFT preparation</p>
+            <button onclick="go('jft1.html')" class="premium-btn">
+              Access Resource <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          
+          <div class="premium-card">
+            <div class="card-icon">
+              <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3>JFT Resource 2</h3>
+            <p>Advanced analytics and performance tracking tools</p>
+            <button onclick="go('jft2.html')" class="premium-btn">
+              Access Resource <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          
+          <div class="premium-card">
+            <div class="card-icon">
+              <i class="fas fa-video"></i>
+            </div>
+            <h3>JFT Resource 3</h3>
+            <p>Exclusive video tutorials and expert sessions</p>
+            <button onclick="go('jft3.html')" class="premium-btn">
+              Access Resource <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2023 JFT Premium. All rights reserved.</p>
+      <button onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </footer>
+  </div>
+
+  <script>
+    window.onload = function() {
+      google.accounts.id.initialize({
+        client_id: "829805960678-liqs7785stnvuv2902ltrmsu63ah9lk6.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("login"),
+        { 
+          theme: "filled_blue", 
+          size: "large",
+          width: 250,
+          text: "signin_with",
+          shape: "pill"
+        }
+      );
+
+      // Show user info if logged in
+      updateUserInfo();
+    };
+
+    // Premium buttons
+    function go(page) {
+      if (localStorage.getItem("isPremium") === "yes") {
+        window.location.href = page;
+      } else {
+        alert("You must be a PREMIUM user to access this resource!");
+      }
+    }
+
+    // Update user info display
+    function updateUserInfo() {
+      const userInfo = document.getElementById("user-info");
+      const premiumUser = localStorage.getItem("premiumUser");
+      const isPremium = localStorage.getItem("isPremium");
+      
+      if (premiumUser && isPremium === "yes") {
+        userInfo.innerHTML = `
+          <div class="user-badge premium">
+            <i class="fas fa-crown"></i>
+            <span>${premiumUser}</span>
+          </div>
+        `;
+      } else if (premiumUser) {
+        userInfo.innerHTML = `
+          <div class="user-badge standard">
+            <i class="fas fa-user"></i>
+            <span>${premiumUser}</span>
+          </div>
+        `;
+      } else {
+        userInfo.innerHTML = '';
+      }
+    }
+  </script>
+</body>
+</html>
