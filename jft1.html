@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script src="premium-check.js"></script>
+  <script>
+// Check if user is premium on premium pages
+if (localStorage.getItem("isPremium") !== "yes") {
+  alert("Access Denied! Premium Only!");
+  window.location.href = "index.html";
+}
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-798CJCLWDZ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -1454,6 +1460,7 @@ Read the dialog and choose the phrase that fits the most.</strong></p>
 </script>
 </body>
 </html>
+
 
 
 
