@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Verification - JFT Premium</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .loading {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid #D4AF37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        button {
+            background: linear-gradient(135deg, #8B5FBF, #6B46C1);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Verification</h2>
+        <div class="loading"></div>
+        <p id="status">Verifying your admin access...</p>
+    </div>
+
+    <script>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyABafybNHccbdYb8rn9-I6u969AXmIGNRw",
+            authDomain: "jft-premium-fa989.firebaseapp.com",
+            projectId: "jft-premium-fa989",
+            storageBucket: "jft-premium-fa989.firebasestorage.app",
+            messagingSenderId: "489498879566",
+            appId: "1:489498879566:web:89be4d4997483c94a4451f"
+        };
+        
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+        
+        // Handle email link sign-in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                updateStatus('✅ Verification successful! Redirecting...');
+                localStorage.setItem('adminAuthenticated', 'true');
+                
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        });
+        
+        // Check for email link
+        if (auth.isSignInWithEmailLink(window.location.href)) {
+            let email = localStorage.getItem('adminEmailForSignIn');
+            
+            if (!email) {
+                email = prompt('Please provide your email for confirmation:');
+            }
+            
+            if (email) {
+                auth.signInWithEmailLink(email, window.location.href)
+                    .then((result) => {
+                        localStorage.removeItem('adminEmailForSignIn');
+                    })
+                    .catch((error) => {
+                        updateStatus('❌ Verification failed: ' + error.message);
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
