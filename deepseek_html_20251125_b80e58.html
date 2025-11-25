@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFT Premium</title>
+  
+  <!-- External Scripts -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  
+  <style>
+    /* ========== CSS STYLES ========== */
+    :root {
+      --primary: #8B5FBF;
+      --primary-dark: #6B46C1;
+      --primary-light: #9F7AEA;
+      --gold: #D4AF37;
+      --gold-light: #F7EFD2;
+      --dark: #2D3748;
+      --light: #F7FAFC;
+      --gray: #718096;
+      --danger: #F56565;
+      --success: #48BB78;
+      --info: #4299E1;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, var(--gold), #B8860B);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), #FFD700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      white-space: nowrap;
+    }
+
+    .logo-text p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      white-space: nowrap;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      min-width: 0;
+    }
+
+    .user-info-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+
+    .user-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .user-status.premium {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1));
+      color: var(--gold);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .user-status.standard {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .login-container {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    /* Google Login Button */
+    .g_id_signin {
+      transform: scale(0.9);
+      max-width: 180px;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 50px;
+      max-width: 600px;
+    }
+
+    .welcome-section h2 {
+      font-size: 36px;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #fff, var(--gold-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .welcome-section p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    /* JFT Categories */
+    .jft-categories {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .category-card {
+      background: linear-gradient(135deg, rgba(139, 95, 191, 0.8), rgba(107, 70, 193, 0.9));
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .category-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(139, 95, 191, 0.4);
+    }
+
+    .category-card:hover::before {
+      left: 100%;
+    }
+
+    .category-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--gold), #B8860B);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: white;
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+    }
+
+    .category-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .category-desc {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .premium-badge {
+      background: linear-gradient(135deg, var(--gold), #B8860B);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    }
+
+    /* JFT Tests Grid */
+    .jft-tests-container {
+      width: 100%;
+      max-width: 1200px;
+      display: none;
+    }
+
+    .tests-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .tests-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, var(--gold-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .jft-tests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .test-btn {
+      background: linear-gradient(135deg, rgba(139, 95, 191, 0.8), rgba(107, 70, 193, 0.9));
+      color: white;
+      border: none;
+      padding: 20px 15px;
+      border-radius: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 18px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .test-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .test-btn:hover {
+      background: linear-gradient(135deg, rgba(139, 95, 191, 0.9), rgba(107, 70, 193, 1));
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(139, 95, 191, 0.4);
+    }
+
+    .test-btn:hover::before {
+      left: 100%;
+    }
+
+    .test-badge {
+      background: linear-gradient(135deg, var(--gold), #B8860B);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .footer-info p {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .logout-btn {
+      background: rgba(245, 101, 101, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(245, 101, 101, 0.3);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      flex-shrink: 0;
+    }
+
+    .logout-btn:hover {
+      background: rgba(245, 101, 101, 0.4);
+      color: white;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      color: white;
+      font-weight: 500;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      min-width: 350px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease;
+      background: linear-gradient(135deg, rgba(245, 101, 101, 0.9), rgba(229, 62, 62, 0.9));
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .notification.success {
+      background: linear-gradient(135deg, rgba(72, 187, 120, 0.9), rgba(56, 161, 105, 0.9));
+    }
+
+    .notification.info {
+      background: linear-gradient(135deg, rgba(66, 153, 225, 0.9), rgba(49, 130, 206, 0.9));
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      position: relative;
+    }
+
+    .notification-content {
+      flex: 1;
+      min-width: 0;
+      padding-right: 0;
+    }
+
+    .notification-content strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .notification-content p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 2px;
+      width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.1);
+    }
+
+    .notification-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .notification button {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      flex: 1;
+    }
+
+    .notification button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Background Effects */
+    .bg-effects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+      opacity: 0.1;
+      animation: float 20s infinite linear;
+    }
+
+    .bg-effect:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .bg-effect:nth-child(2) {
+      width: 200px;
+      height: 200px;
+      top: 60%;
+      right: 10%;
+      animation-delay: -5s;
+      background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+    }
+
+    .bg-effect:nth-child(3) {
+      width: 400px;
+      height: 400px;
+      bottom: 10%;
+      left: 20%;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(50px, 50px) rotate(90deg); }
+      50% { transform: translate(0, 100px) rotate(180deg); }
+      75% { transform: translate(-50px, 50px) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    /* Admin Panel Styles */
+    .admin-panel {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .admin-toggle {
+      background: linear-gradient(135deg, var(--gold), #B8860B);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .admin-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+    }
+
+    .admin-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+
+    .admin-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #2D3748, #4A5568);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .admin-title {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), #FFD700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .close-admin {
+      background: rgba(245, 101, 101, 0.2);
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close-admin:hover {
+      background: rgba(245, 101, 101, 0.4);
+      transform: rotate(90deg);
+    }
+
+    .admin-section {
+      margin-bottom: 25px;
+    }
+
+    .admin-section h3 {
+      margin-bottom: 15px;
+      color: var(--gold);
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-list {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .user-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .user-email {
+      flex: 1;
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    .user-expiry {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-right: 10px;
+    }
+
+    .remove-user {
+      background: rgba(245, 101, 101, 0.3);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .remove-user:hover {
+      background: rgba(245, 101, 101, 0.5);
+    }
+
+    .add-user-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .email-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 14px;
+    }
+
+    .email-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .expiry-select {
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 14px;
+    }
+
+    .expiry-select option {
+      background: #2D3748;
+      color: white;
+    }
+
+    .add-user-btn {
+      background: linear-gradient(135deg, var(--success), #38A169);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .add-user-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .admin-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .admin-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .export-btn {
+      background: linear-gradient(135deg, var(--info), #3182CE);
+    }
+
+    .import-btn {
+      background: linear-gradient(135deg, var(--primary), #6B46C1);
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    /* Password Modal Styles */
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 3000;
+      backdrop-filter: blur(5px);
+    }
+
+    .password-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(135deg, #2D3748, #4A5568);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .password-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .password-title {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), #FFD700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .close-password {
+      background: rgba(245, 101, 101, 0.2);
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close-password:hover {
+      background: rgba(245, 101, 101, 0.4);
+      transform: rotate(90deg);
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .password-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .password-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), #B8860B);
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .password-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+    }
+
+    /* Auth Method Toggle */
+    .auth-method-toggle {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .toggle-link {
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 14px;
+    }
+
+    .toggle-link:hover {
+      color: #FFD700;
+    }
+
+    /* Loading Animation */
+    .loading {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+        flex-direction: column;
+      }
+      
+      .main-content {
+        padding: 20px;
+      }
+      
+      .welcome-section h2 {
+        font-size: 28px;
+      }
+      
+      .jft-categories {
+        grid-template-columns: 1fr;
+      }
+      
+      .admin-panel {
+        top: 10px;
+        left: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-effects">
+    <div class="bg-effect"></div>
+    <div class="bg-effect"></div>
+    <div class="bg-effect"></div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="admin-panel" id="adminPanel" style="display: none;">
+    <button class="admin-toggle" onclick="showAdminLoginModal()">
+      <i class="fas fa-users-cog"></i> Admin
+    </button>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-crown"></i>
+        </div>
+        <div class="logo-text">
+          <h1>JFT Premium</h1>
+          <p>Exclusive Japanese Test Preparation</p>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div id="user-info" class="user-info-container">
+          <!-- User info will be populated by JavaScript -->
+        </div>
+        <div id="login" class="login-container">
+          <!-- Google login button will be rendered here -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="welcome-section">
+        <h2>Unlock Premium JFT Resources</h2>
+        <p>Access exclusive practice tests and master the Japanese Language Test with our premium content</p>
+      </div>
+
+      <!-- JFT Categories -->
+      <div class="jft-categories" id="categories">
+        <!-- Categories will be dynamically generated here -->
+      </div>
+
+      <!-- JFT Tests Grid -->
+      <div class="jft-tests-container" id="tests-container">
+        <div class="tests-header">
+          <button class="back-btn" onclick="showCategories()">
+            <i class="fas fa-arrow-left"></i> Back to Categories
+          </button>
+          <h2 class="tests-title" id="tests-title">JFT Tests</h2>
+        </div>
+        <div class="jft-tests-grid" id="tests-grid">
+          <!-- Tests will be dynamically generated here -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-info">
+        <p>&copy; 2023 JFT Premium. Exclusive access for premium members.</p>
+      </div>
+      <button onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </footer>
+  </div>
+
+  <script>
+    // ========== FIREBASE CONFIGURATION ==========
+    const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyABafybNHccbdYb8rn9-I6u969AXmIGNRw",
+        authDomain: "jft-premium-fa989.firebaseapp.com",
+        projectId: "jft-premium-fa989",
+        storageBucket: "jft-premium-fa989.firebasestorage.app",
+        messagingSenderId: "489498879566",
+        appId: "1:489498879566:web:89be4d4997483c94a4451f"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(FIREBASE_CONFIG);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // Global variables
+    window.currentAdmin = null;
+    window.authManager = null;
+    window.premiumManager = null;
+
+    // ========== AUTHENTICATION MANAGER ==========
+    class AuthManager {
+        constructor() {
+            this.currentAdmin = null;
+            this.init();
+        }
+
+        init() {
+            // Auth state listener
+            auth.onAuthStateChanged((user) => {
+                console.log('Auth state changed:', user?.email);
+                
+                if (user && user.email === 'ooooshine1@gmail.com') {
+                    this.currentAdmin = user;
+                    window.currentAdmin = user;
+                    document.getElementById('adminPanel').style.display = 'block';
+                    console.log('✅ Admin panel shown for:', user.email);
+                } else {
+                    this.currentAdmin = null;
+                    window.currentAdmin = null;
+                    document.getElementById('adminPanel').style.display = 'none';
+                }
+            });
+
+            // Check email link sign-in
+            this.checkEmailLinkSignIn();
+        }
+
+        // Passwordless authentication
+        async sendPasswordlessLink(email) {
+            try {
+                const actionCodeSettings = {
+                    url: window.location.origin + '/admin-verify.html',
+                    handleCodeInApp: true
+                };
+                
+                await auth.sendSignInLinkToEmail(email, actionCodeSettings);
+                localStorage.setItem('adminEmailForSignIn', email);
+                showNotification('Login link sent to your email!', 'success');
+                return true;
+            } catch (error) {
+                showNotification('Error: ' + error.message, 'info');
+                return false;
+            }
+        }
+
+        checkEmailLinkSignIn() {
+            if (auth.isSignInWithEmailLink(window.location.href)) {
+                let email = localStorage.getItem('adminEmailForSignIn');
+                if (!email) email = prompt('Please provide your email:');
+                if (email) this.handleEmailLinkSignIn(email, window.location.href);
+            }
+        }
+
+        async handleEmailLinkSignIn(email, url) {
+            try {
+                const result = await auth.signInWithEmailLink(email, url);
+                localStorage.removeItem('adminEmailForSignIn');
+                this.currentAdmin = result.user;
+                showNotification('Admin login successful!', 'success');
+                window.history.replaceState({}, '', window.location.pathname);
+                return true;
+            } catch (error) {
+                showNotification('Login failed: ' + error.message, 'info');
+                return false;
+            }
+        }
+
+        // Traditional password authentication
+        async loginWithPassword(email, password) {
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                this.currentAdmin = userCredential.user;
+                showNotification('Admin login successful!', 'success');
+                return true;
+            } catch (error) {
+                showNotification('Login failed: ' + error.message, 'info');
+                return false;
+            }
+        }
+
+        isAdminAuthenticated() {
+            return this.currentAdmin !== null;
+        }
+
+        async logout() {
+            await auth.signOut();
+            this.currentAdmin = null;
+            showNotification('Admin logged out', 'info');
+        }
+    }
+
+    // ========== PREMIUM USER MANAGER ==========
+    class PremiumManager {
+        async checkPremiumStatus(email) {
+            try {
+                const docRef = db.collection('premiumUsers').doc(email);
+                const doc = await docRef.get();
+                
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const today = new Date().toISOString().split('T')[0];
+                    return userData.expiry >= today;
+                }
+                return false;
+            } catch (error) {
+                console.error('Firebase error:', error);
+                return this.fallbackIsPremiumUser(email);
+            }
+        }
+
+        async addPremiumUser(email, expiryDays = 30) {
+            if (!window.currentAdmin) {
+                showNotification("Admin authentication required", "info");
+                return false;
+            }
+            
+            try {
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + parseInt(expiryDays));
+                
+                await db.collection('premiumUsers').doc(email).set({
+                    email: email,
+                    expiry: expiryDate.toISOString().split('T')[0],
+                    addedAt: new Date().toISOString(),
+                    addedBy: window.currentAdmin.email
+                });
+                
+                showNotification('Premium user added successfully!', 'success');
+                return true;
+            } catch (error) {
+                showNotification('Error adding user: ' + error.message, 'info');
+                return false;
+            }
+        }
+
+        async removePremiumUser(email) {
+            if (!window.currentAdmin) {
+                showNotification("Admin authentication required", "info");
+                return false;
+            }
+            
+            try {
+                await db.collection('premiumUsers').doc(email).delete();
+                showNotification('User removed successfully!', 'success');
+                return true;
+            } catch (error) {
+                showNotification('Error removing user: ' + error.message, 'info');
+                return false;
+            }
+        }
+
+        async getAllPremiumUsers() {
+            try {
+                const snapshot = await db.collection('premiumUsers').get();
+                const users = [];
+                snapshot.forEach(doc => {
+                    users.push({ email: doc.id, ...doc.data() });
+                });
+                users.sort((a, b) => new Date(a.expiry) - new Date(b.expiry));
+                return users;
+            } catch (error) {
+                return [];
+            }
+        }
+
+        fallbackIsPremiumUser(email) {
+            const premiumUsers = JSON.parse(localStorage.getItem('premiumUsers') || '[]');
+            const user = premiumUsers.find(u => u.email === email);
+            const today = new Date().toISOString().split('T')[0];
+            return user ? user.expiry >= today : false;
+        }
+    }
+
+    // ========== APPLICATION LOGIC ==========
+    
+    // Test data structure
+    const testCategories = [
+      {
+        id: 1, name: "Vocabulary Tests", icon: "fas fa-book",
+        description: "Master essential Japanese vocabulary",
+        tests: Array.from({length: 10}, (_, i) => ({ 
+            id: i+1, name: `Vocab Test ${i+1}`, file: `vocab_${i+1}.html` 
+        }))
+      },
+      {
+        id: 2, name: "Grammar Tests", icon: "fas fa-language", 
+        description: "Improve your Japanese grammar skills",
+        tests: Array.from({length: 10}, (_, i) => ({ 
+            id: i+1, name: `Grammar Test ${i+1}`, file: `grammar_${i+1}.html` 
+        }))
+      },
+      {
+        id: 3, name: "Reading Comprehension", icon: "fas fa-file-alt",
+        description: "Enhance your reading skills",
+        tests: Array.from({length: 10}, (_, i) => ({ 
+            id: i+1, name: `Reading Test ${i+1}`, file: `reading_${i+1}.html` 
+        }))
+      },
+      {
+        id: 4, name: "Listening Tests", icon: "fas fa-headphones",
+        description: "Practice listening comprehension", 
+        tests: Array.from({length: 10}, (_, i) => ({ 
+            id: i+1, name: `Listening Test ${i+1}`, file: `listening_${i+1}.html` 
+        }))
+      },
+      {
+        id: 5, name: "Full Practice Tests", icon: "fas fa-clipboard-check",
+        description: "Simulate the real JFT exam",
+        tests: Array.from({length: 10}, (_, i) => ({ 
+            id: i+1, name: `Practice Test ${i+1}`, file: `full_test_${i+1}.html` 
+        }))
+      }
+    ];
+
+    // Initialize managers
+    function initializeManagers() {
+        window.authManager = new AuthManager();
+        window.premiumManager = new PremiumManager();
+    }
+
+    // Category functions
+    function initializeCategories() {
+        const categoriesContainer = document.getElementById('categories');
+        categoriesContainer.innerHTML = '';
+        
+        testCategories.forEach(category => {
+            const categoryCard = document.createElement('div');
+            categoryCard.className = 'category-card';
+            categoryCard.onclick = () => showTests(category.id);
+            
+            categoryCard.innerHTML = `
+                <div class="category-icon"><i class="${category.icon}"></i></div>
+                <h3 class="category-title">${category.name}</h3>
+                <p class="category-desc">${category.description}</p>
+                <span class="premium-badge"><i class="fas fa-crown"></i> PREMIUM</span>
+            `;
+            
+            categoriesContainer.appendChild(categoryCard);
+        });
+    }
+
+    function showTests(categoryId) {
+        if (localStorage.getItem("isPremium") === "yes") {
+            const category = testCategories.find(cat => cat.id === categoryId);
+            if (!category) return;
+            
+            document.getElementById('categories').style.display = 'none';
+            document.getElementById('tests-container').style.display = 'block';
+            document.getElementById('tests-title').textContent = category.name;
+            
+            const testsGrid = document.getElementById('tests-grid');
+            testsGrid.innerHTML = '';
+            
+            category.tests.forEach(test => {
+                const testBtn = document.createElement('button');
+                testBtn.className = 'test-btn';
+                testBtn.innerHTML = `${test.name}<span class="test-badge"><i class="fas fa-crown"></i> PREMIUM</span>`;
+                testsGrid.appendChild(testBtn);
+            });
+        } else {
+            showPremiumNotification();
+        }
+    }
+
+    function showCategories() {
+        document.getElementById('categories').style.display = 'grid';
+        document.getElementById('tests-container').style.display = 'none';
+    }
+
+    // Admin panel functions
+    function showAdminLoginModal() {
+        const modal = document.createElement('div');
+        modal.innerHTML = `
+            <div class="password-modal" style="display: block;">
+                <div class="password-content">
+                    <div class="password-header">
+                        <h2 class="password-title">Admin Login</h2>
+                        <button class="close-password" onclick="this.parentElement.parentElement.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <input type="email" class="password-input" id="adminEmail" placeholder="Admin email">
+                    <input type="password" class="password-input" id="adminPassword" placeholder="Admin password" style="display: none;">
+                    <button class="password-submit" onclick="handlePasswordlessLogin()">
+                        <i class="fas fa-paper-plane"></i> Send Login Link
+                    </button>
+                    <div class="auth-method-toggle">
+                        <span class="toggle-link" onclick="toggleAuthMethod()">Use password login instead</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    async function handlePasswordlessLogin() {
+        const email = document.getElementById('adminEmail').value;
+        if (!email) return showNotification("Please enter email", "info");
+        const success = await window.authManager.sendPasswordlessLink(email);
+        if (success) document.querySelector('.password-modal').remove();
+    }
+
+    function toggleAuthMethod() {
+        const modal = document.querySelector('.password-modal');
+        const passwordInput = modal.querySelector('#adminPassword');
+        const button = modal.querySelector('button');
+        
+        if (passwordInput.style.display === 'none') {
+            passwordInput.style.display = 'block';
+            button.innerHTML = '<i class="fas fa-lock"></i> Login with Password';
+            button.onclick = handlePasswordLogin;
+            modal.querySelector('.toggle-link').textContent = 'Use passwordless login instead';
+        } else {
+            passwordInput.style.display = 'none';
+            button.innerHTML = '<i class="fas fa-paper-plane"></i> Send Login Link';
+            button.onclick = handlePasswordlessLogin;
+            modal.querySelector('.toggle-link').textContent = 'Use password login instead';
+        }
+    }
+
+    async function handlePasswordLogin() {
+        const email = document.getElementById('adminEmail').value;
+        const password = document.getElementById('adminPassword').value;
+        if (!email || !password) return showNotification("Please enter both fields", "info");
+        const success = await window.authManager.loginWithPassword(email, password);
+        if (success) document.querySelector('.password-modal').remove();
+    }
+
+    function showAdminPanel() {
+        if (!window.currentAdmin) return showNotification("Please login first", "info");
+        
+        const modal = document.createElement('div');
+        modal.className = 'admin-modal';
+        modal.style.display = 'block';
+        modal.innerHTML = `
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2 class="admin-title">Premium Users Management</h2>
+                    <button class="close-admin" onclick="this.parentElement.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="admin-section">
+                    <h3><i class="fas fa-users"></i> Current Premium Users</h3>
+                    <div class="user-list" id="userList">Loading...</div>
+                    <div class="add-user-form">
+                        <input type="email" class="email-input" id="newUserEmail" placeholder="Enter email address">
+                        <select class="expiry-select" id="expiryDays">
+                            <option value="30">30 Days</option>
+                            <option value="60">60 Days</option>
+                            <option value="90">90 Days</option>
+                        </select>
+                        <button class="add-user-btn" onclick="addPremiumUser()">
+                            <i class="fas fa-plus"></i> Add Premium User
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        loadUserList();
+    }
+
+    async function loadUserList() {
+        const userList = document.getElementById('userList');
+        if (!userList) return;
+        
+        try {
+            const users = await window.premiumManager.getAllPremiumUsers();
+            userList.innerHTML = users.map(user => `
+                <div class="user-item">
+                    <div style="flex: 1;">
+                        <div class="user-email">${user.email}</div>
+                        <div class="user-expiry">Expires: ${new Date(user.expiry).toLocaleDateString()}</div>
+                    </div>
+                    <button class="remove-user" onclick="removePremiumUser('${user.email}')">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `).join('') || '<div style="text-align: center; padding: 20px;">No premium users</div>';
+        } catch (error) {
+            userList.innerHTML = '<div style="text-align: center; color: #F56565;">Error loading users</div>';
+        }
+    }
+
+    async function addPremiumUser() {
+        const email = document.getElementById('newUserEmail').value;
+        const days = document.getElementById('expiryDays').value;
+        if (!email) return showNotification("Please enter email", "info");
+        const success = await window.premiumManager.addPremiumUser(email, days);
+        if (success) {
+            document.getElementById('newUserEmail').value = '';
+            loadUserList();
+        }
+    }
+
+    async function removePremiumUser(email) {
+        if (!confirm(`Remove ${email}?`)) return;
+        const success = await window.premiumManager.removePremiumUser(email);
+        if (success) loadUserList();
+    }
+
+    // Utility functions
+    function showNotification(message, type) {
+        const existing = document.querySelector('.notification');
+        if (existing) existing.remove();
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-header">
+                <div class="notification-content">${message}</div>
+                <button class="close-btn" onclick="this.parentElement.parentElement.remove()">&times;</button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 5000);
+    }
+
+    function showPremiumNotification() {
+        showNotification('You need premium access for this feature!', 'info');
+    }
+
+    function logout() {
+        localStorage.removeItem("isPremium");
+        localStorage.removeItem("premiumUser");
+        showNotification("Logged out!", "info");
+        setTimeout(() => location.reload(), 1000);
+    }
+
+    function updateUserInfo() {
+        const userInfo = document.getElementById("user-info");
+        const user = localStorage.getItem("premiumUser");
+        const isPremium = localStorage.getItem("isPremium");
+        
+        if (user && isPremium === "yes") {
+            userInfo.innerHTML = `<div class="user-status premium"><i class="fas fa-crown"></i><span>${user.split('@')[0]}</span></div>`;
+        } else if (user) {
+            userInfo.innerHTML = `<div class="user-status standard"><i class="fas fa-user"></i><span>${user.split('@')[0]}</span></div>`;
+        } else {
+            userInfo.innerHTML = '';
+        }
+    }
+
+    // Google login
+    function handleCredentialResponse(response) {
+        const data = JSON.parse(atob(response.credential.split('.')[1]));
+        const userEmail = data.email;
+        localStorage.setItem("premiumUser", userEmail);
+
+        window.premiumManager.checkPremiumStatus(userEmail).then(isPremium => {
+            localStorage.setItem("isPremium", isPremium ? "yes" : "no");
+            showNotification(isPremium ? "Premium Login Successful!" : "Standard user logged in", "success");
+            updateUserInfo();
+        });
+    }
+
+    // Initialize everything
+    window.onload = function() {
+        google.accounts.id.initialize({
+            client_id: "829805960678-liqs7785stnvuv2902ltrmsu63ah9lk6.apps.googleusercontent.com",
+            callback: handleCredentialResponse,
+            auto_select: false
+        });
+
+        google.accounts.id.renderButton(document.getElementById("login"), {
+            theme: "filled_blue", size: "large", width: 200, text: "signin_with", shape: "pill"
+        });
+
+        initializeManagers();
+        initializeCategories();
+        updateUserInfo();
+    };
+  </script>
+</body>
+</html>
