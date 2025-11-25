@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFT Premium</title>
+  
+  <!-- External Scripts -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  
+  <!-- CSS File -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-effects">
+    <div class="bg-effect"></div>
+    <div class="bg-effect"></div>
+    <div class="bg-effect"></div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="admin-panel" id="adminPanel" style="display: none;">
+    <button class="admin-toggle" onclick="showAdminLoginModal()">
+      <i class="fas fa-users-cog"></i> Admin
+    </button>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-crown"></i>
+        </div>
+        <div class="logo-text">
+          <h1>JFT Premium</h1>
+          <p>Exclusive Japanese Test Preparation</p>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <div id="user-info" class="user-info-container">
+          <!-- User info will be populated by JavaScript -->
+        </div>
+        <div id="login" class="login-container">
+          <!-- Google login button will be rendered here -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="welcome-section">
+        <h2>Unlock Premium JFT Resources</h2>
+        <p>Access exclusive practice tests and master the Japanese Language Test with our premium content</p>
+      </div>
+
+      <!-- JFT Categories -->
+      <div class="jft-categories" id="categories">
+        <!-- Categories will be dynamically generated here -->
+      </div>
+
+      <!-- JFT Tests Grid -->
+      <div class="jft-tests-container" id="tests-container">
+        <div class="tests-header">
+          <button class="back-btn" onclick="showCategories()">
+            <i class="fas fa-arrow-left"></i> Back to Categories
+          </button>
+          <h2 class="tests-title" id="tests-title">JFT Tests</h2>
+        </div>
+        <div class="jft-tests-grid" id="tests-grid">
+          <!-- Tests will be dynamically generated here -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-info">
+        <p>&copy; 2023 JFT Premium. Exclusive access for premium members.</p>
+      </div>
+      <button onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </footer>
+  </div>
+
+  <!-- JavaScript Files - IMPORTANT: This order matters -->
+  <script src="firebase-config.js"></script>
+  <script src="auth-manager.js"></script>
+  <script src="premium-manager.js"></script>
+  <script src="admin-panel.js"></script>
+  
+  <!-- Main Application Logic -->
+  <script>
+    // ========== APPLICATION INITIALIZATION ==========
+    
+    // Test data structure - 5 categories only
+    const testCategories = [
+      {
+        id: 1,
+        name: "Vocabulary Tests",
+        icon: "fas fa-book",
+        description: "Master essential Japanese vocabulary with our comprehensive test series",
+        tests: [
+          { id: 1, name: "Basic Words", file: "vocab_basic.html" },
+          { id: 2, name: "Food & Dining", file: "vocab_food.html" },
+          { id: 3, name: "Travel", file: "vocab_travel.html" },
+          { id: 4, name: "Business", file: "vocab_business.html" },
+          { id: 5, name: "Advanced Vocab", file: "vocab_advanced.html" },
+          { id: 6, name: "Daily Life", file: "vocab_daily.html" },
+          { id: 7, name: "Technology", file: "vocab_tech.html" },
+          { id: 8, name: "Medical Terms", file: "vocab_medical.html" },
+          { id: 9, name: "Academic Words", file: "vocab_academic.html" },
+          { id: 10, name: "Slang & Idioms", file: "vocab_idioms.html" },
+        ]
+      },
+      {
+        id: 2,
+        name: "Grammar Tests", 
+        icon: "fas fa-language",
+        description: "Improve your Japanese grammar skills with targeted practice tests",
+        tests: [
+          { id: 1, name: "Basic Grammar", file: "grammar_basic.html" },
+          { id: 2, name: "Verb Conjugation", file: "grammar_verbs.html" },
+          { id: 3, name: "Particles", file: "grammar_particles.html" },
+          { id: 4, name: "Sentence Structure", file: "grammar_sentence.html" },
+          { id: 5, name: "Conditionals", file: "grammar_conditionals.html" },
+          { id: 6, name: "Passive Voice", file: "grammar_passive.html" },
+          { id: 7, name: "Causative Form", file: "grammar_causative.html" },
+          { id: 8, name: "Honorifics", file: "grammar_honorifics.html" },
+          { id: 9, name: "Advanced Grammar", file: "grammar_advanced.html" },
+          { id: 10, name: "Common Mistakes", file: "grammar_mistakes.html" },
+        ]
+      },
+      {
+        id: 3,
+        name: "Reading Comprehension",
+        icon: "fas fa-file-alt",
+        description: "Enhance your reading skills with authentic Japanese texts",
+        tests: [
+          { id: 1, name: "Short Stories", file: "reading_stories.html" },
+          { id: 2, name: "News Articles", file: "reading_news.html" },
+          { id: 3, name: "Business Documents", file: "reading_business.html" },
+          { id: 4, name: "Emails & Letters", file: "reading_emails.html" },
+          { id: 5, name: "Academic Texts", file: "reading_academic.html" },
+          { id: 6, name: "Instructions", file: "reading_instructions.html" },
+          { id: 7, name: "Advertisements", file: "reading_ads.html" },
+          { id: 8, name: "Literary Works", file: "reading_literature.html" },
+          { id: 9, name: "Technical Manuals", file: "reading_technical.html" },
+          { id: 10, name: "Advanced Reading", file: "reading_advanced.html" },
+        ]
+      },
+      {
+        id: 4,
+        name: "Listening Tests",
+        icon: "fas fa-headphones",
+        description: "Practice your listening comprehension with native Japanese audio",
+        tests: [
+          { id: 1, name: "Basic Conversations", file: "listening_basic.html" },
+          { id: 2, name: "Phone Calls", file: "listening_phone.html" },
+          { id: 3, name: "Announcements", file: "listening_announcements.html" },
+          { id: 4, name: "Interviews", file: "listening_interviews.html" },
+          { id: 5, name: "Lectures", file: "listening_lectures.html" },
+          { id: 6, name: "Radio Programs", file: "listening_radio.html" },
+          { id: 7, name: "TV Shows", file: "listening_tv.html" },
+          { id: 8, name: "Business Meetings", file: "listening_meetings.html" },
+          { id: 9, name: "Accent Variations", file: "listening_accents.html" },
+          { id: 10, name: "Advanced Listening", file: "listening_advanced.html" },
+        ]
+      },
+      {
+        id: 5,
+        name: "Full Practice Tests",
+        icon: "fas fa-clipboard-check",
+        description: "Simulate the real JFT exam with our comprehensive practice tests",
+        tests: [
+          { id: 1, name: "Practice Test 1", file: "full_test_1.html" },
+          { id: 2, name: "Practice Test 2", file: "full_test_2.html" },
+          { id: 3, name: "Practice Test 3", file: "full_test_3.html" },
+          { id: 4, name: "Practice Test 4", file: "full_test_4.html" },
+          { id: 5, name: "Practice Test 5", file: "full_test_5.html" },
+          { id: 6, name: "Practice Test 6", file: "full_test_6.html" },
+          { id: 7, name: "Practice Test 7", file: "full_test_7.html" },
+          { id: 8, name: "Practice Test 8", file: "full_test_8.html" },
+          { id: 9, name: "Practice Test 9", file: "full_test_9.html" },
+          { id: 10, name: "Practice Test 10", file: "full_test_10.html" },
+        ]
+      }
+    ];
+
+    // Initialize categories on page load
+    function initializeCategories() {
+      const categoriesContainer = document.getElementById('categories');
+      categoriesContainer.innerHTML = '';
+      
+      testCategories.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.className = 'category-card';
+        categoryCard.onclick = () => showTests(category.id);
+        
+        categoryCard.innerHTML = `
+          <div class="category-icon">
+            <i class="${category.icon}"></i>
+          </div>
+          <h3 class="category-title">${category.name}</h3>
+          <p class="category-desc">${category.description}</p>
+          <span class="premium-badge">
+            <i class="fas fa-crown"></i> PREMIUM
+          </span>
+        `;
+        
+        categoriesContainer.appendChild(categoryCard);
+      });
+    }
+
+    // Show tests for a specific category
+    function showTests(categoryId) {
+      if (localStorage.getItem("isPremium") === "yes") {
+        const category = testCategories.find(cat => cat.id === categoryId);
+        
+        if (!category) return;
+        
+        // Hide categories, show tests
+        document.getElementById('categories').style.display = 'none';
+        document.getElementById('tests-container').style.display = 'block';
+        
+        // Set title
+        document.getElementById('tests-title').textContent = category.name;
+        
+        // Generate test buttons
+        const testsGrid = document.getElementById('tests-grid');
+        testsGrid.innerHTML = '';
+        
+        category.tests.forEach(test => {
+          const testBtn = document.createElement('button');
+          testBtn.className = 'test-btn';
+          testBtn.onclick = () => goToTest(test.file);
+          
+          testBtn.innerHTML = `
+            ${test.name}
+            <span class="test-badge">
+              <i class="fas fa-crown"></i> PREMIUM
+            </span>
+          `;
+          
+          testsGrid.appendChild(testBtn);
+        });
+      } else {
+        showPremiumNotification();
+      }
+    }
+
+    // Show categories (back button)
+    function showCategories() {
+      document.getElementById('categories').style.display = 'grid';
+      document.getElementById('tests-container').style.display = 'none';
+    }
+
+    // Navigate to test page
+    function goToTest(fileName) {
+      window.location.href = fileName;
+    }
+
+    // Show premium notification
+    function showPremiumNotification() {
+      const existingNotification = document.querySelector('.notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+      
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.innerHTML = `
+        <div class="notification-header">
+          <div class="notification-content">
+            <strong>You are not a Premium User!</strong>
+            <p>Upgrade to premium to access all JFT practice tests.</p>
+          </div>
+          <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+            &times;
+          </button>
+        </div>
+        <div class="notification-actions">
+          <button onclick="showBuyPremium()">
+            <i class="fab fa-telegram"></i> Buy Premium via Telegram
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 8000);
+    }
+
+    // Show buy premium option
+    function showBuyPremium() {
+      window.open('https://t.me/shinegyi123', '_blank');
+    }
+
+    // Notification function
+    function showNotification(message, type) {
+      const existingNotification = document.querySelector('.notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+      
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.innerHTML = `
+        <div class="notification-header">
+          <div class="notification-content">
+            <span>${message}</span>
+          </div>
+          <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+            &times;
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+
+    // Google login callback
+    function handleCredentialResponse(response) {
+      const data = parseJwt(response.credential);
+      const userEmail = data.email;
+      localStorage.setItem("premiumUser", userEmail);
+
+      // Use Firebase to check premium status
+      checkPremiumStatus(userEmail).then(isPremium => {
+        if (isPremium) {
+          localStorage.setItem("isPremium", "yes");
+          showNotification("Premium Login Successful! Welcome to JFT Premium.", "success");
+        } else {
+          localStorage.setItem("isPremium", "no");
+          showNotification("You are logged in but don't have premium access.", "info");
+        }
+        updateUserInfo();
+      });
+    }
+
+    function parseJwt(token) {
+      return JSON.parse(atob(token.split('.')[1]));
+    }
+
+    function logout() {
+      localStorage.removeItem("isPremium");
+      localStorage.removeItem("premiumUser");
+      showNotification("Logged out successfully!", "info");
+      setTimeout(() => {
+        location.href = "index.html";
+      }, 1000);
+    }
+
+    function updateUserInfo() {
+      const userInfo = document.getElementById("user-info");
+      const premiumUser = localStorage.getItem("premiumUser");
+      const isPremium = localStorage.getItem("isPremium");
+      
+      if (premiumUser && isPremium === "yes") {
+        const username = getUsernameFromEmail(premiumUser);
+        
+        userInfo.innerHTML = `
+          <div class="user-status premium">
+            <i class="fas fa-crown"></i>
+            <span>${username}</span>
+          </div>
+        `;
+      } else if (premiumUser) {
+        const username = getUsernameFromEmail(premiumUser);
+        userInfo.innerHTML = `
+          <div class="user-status standard">
+            <i class="fas fa-user"></i>
+            <span>${username}</span>
+          </div>
+        `;
+      } else {
+        userInfo.innerHTML = '';
+      }
+    }
+
+    function getUsernameFromEmail(email) {
+      if (!email) return '';
+      return email.split('@')[0];
+    }
+
+    window.onload = function() {
+      // Initialize Google Sign-In
+      google.accounts.id.initialize({
+        client_id: "829805960678-liqs7785stnvuv2902ltrmsu63ah9lk6.apps.googleusercontent.com",
+        callback: handleCredentialResponse,
+        auto_select: false
+      });
+
+      // Render the Google Sign-In button
+      google.accounts.id.renderButton(
+        document.getElementById("login"),
+        { 
+          theme: "filled_blue", 
+          size: "large",
+          width: 200,
+          text: "signin_with",
+          shape: "pill",
+          logo_alignment: "center"
+        }
+      );
+
+      // Initialize categories
+      initializeCategories();
+      
+      // Show user info if logged in
+      updateUserInfo();
+      
+      // Initialize Firebase Auth listener
+      initializeAuthListener();
+    };
+  </script>
+</body>
+</html>
