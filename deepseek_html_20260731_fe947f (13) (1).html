@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>JLPT N4 · Kotoba Note (Japanese to Myanmar)</title>
+  <style>
+    /* ========== ORIGINAL CSS (unchanged) ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --primary-color: #1a73e8; --primary-dark: #1557b0; --success-color: #0f9d58; --danger-color: #d93025; --warning-color: #f4b400; --light-bg: #f8f9fa; --border-color: #dadce0; --text-primary: #202124; --text-secondary: #5f6368; --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05); --shadow-md: 0 2px 4px 0 rgba(0,0,0,0.1); --shadow-lg: 0 4px 6px -1px rgba(0,0,0,0.1); --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --transition: all 0.2s ease; }
+    body { font-family: 'Times New Roman', 'Georgia', serif; background: #f5f5f5; min-height: 100vh; color: #222; }
+    .sticky-header { position: sticky; top: 0; z-index: 100; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 6px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: #333; padding: 4px 8px; display: flex; align-items: center; gap: 4px; }
+    .back-btn:hover { background: #f0f0f0; border-radius: 4px; }
+    .timer-compact { background: #333; color: white; padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-family: monospace; }
+    .timer-compact.warning { background: #d32f2f; }
+    .section-tabs { background: white; padding: 6px 15px; border-bottom: 1px solid #ddd; position: sticky; top: 41px; z-index: 99; display: flex; gap: 4px; flex-wrap: wrap; }
+    .tab-btn { padding: 4px 10px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 3px; cursor: pointer; font-size: 0.75rem; color: #333; min-width: 50px; text-align: center; font-family: 'Arial', sans-serif; }
+    .tab-btn.active { background: #333; border-color: #333; color: white; }
+    .tab-btn.completed { background: #2e7d32; border-color: #2e7d32; color: white; }
+    .tab-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .main-container { max-width: 900px; margin: 15px auto; padding: 0 15px; }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: white; border-radius: 8px; padding: 25px; max-width: 400px; width: 90%; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+    .modal-title { font-size: 1.4rem; font-weight: 600; color: #333; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+    .photo-upload-container { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 15px; }
+    .photo-preview { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #333; object-fit: cover; }
+    .upload-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    .upload-btn:hover { background: #e0e0e0; }
+    #photoInput { display: none; }
+    .modal-form { display: flex; flex-direction: column; gap: 12px; }
+    .modal-input { padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
+    .modal-input:focus { outline: none; border-color: #333; }
+    .modal-btn { background: #333; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+    .modal-btn:hover { background: #555; }
+    .section-container { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; display: none; }
+    .section-container.active { display: block; }
+    .section-footer { display: flex; justify-content: flex-end; margin-top: 20px; padding-top: 10px; border-top: 1px solid #e0e0e0; }
+    .section-end-btn { background: #f0f0f0; border: 1px solid #ccc; padding: 8px 24px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; font-weight: 500; }
+    .section-end-btn:hover { background: #e0e0e0; }
+
+    /* ========================================== */
+    /* 🔥 A4 PAPER STYLE - CLEAN TEXT DISPLAY   */
+    /* ========================================== */
+    .mondai-group {
+      margin-bottom: 20px;
+      padding: 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+    }
+    .mondai-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dotted #ccc;
+      padding-bottom: 5px;
+    }
+    .mondai-points {
+      font-size: 0.8rem;
+      color: #666;
+      font-weight: normal;
+    }
+    .question-block {
+      margin-bottom: 15px;
+      padding: 8px 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+    }
+    .question-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .question-number {
+      background: #333;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.7rem;
+    }
+    .question-points {
+      font-size: 0.7rem;
+      color: #666;
+    }
+    .question-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      padding: 0;
+      background: transparent;
+      border-left: none;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .option-label {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .option-label:hover {
+      background: transparent;
+    }
+    .option-label input[type="radio"] {
+      margin-right: 8px;
+    }
+    .option-label.correct-highlight {
+      background: #e8f5e9;
+      border: 1px solid #2e7d32;
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+    .option-label.wrong-highlight {
+      background: #ffebee;
+      border: 1px solid #c62828;
+      padding: 4px 8px;
+      border-radius: 3px;
+    }
+    
+    /* Reading Passage Style - Clean A4 */
+    .reading-passage {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin-bottom: 15px;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+    .reading-passage h4 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 5px;
+    }
+    .passage-image {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    
+    .media-container { background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; padding: 15px; margin: 10px 0; }
+    .audio-player { width: 100%; margin-bottom: 10px; }
+    .audio-player audio { width: 100%; height: 40px; }
+    /* Listening Player */
+    .listening-player-container { background: #f5f5f5; border-radius: 8px; padding: 12px 15px; margin-bottom: 20px; border: 1px solid #ddd; }
+    .simple-audio-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .play-only-btn { background: #333; border: none; color: white; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; font-size: 1.3rem; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .play-only-btn:hover { background: #555; }
+    .pause-btn, .seek-slider { display: none; }
+    .time-display { color: #333; font-family: monospace; font-size: 0.85rem; background: #e8e8e8; padding: 4px 10px; border-radius: 20px; }
+    .action-buttons { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .action-btn { background: none; border: 1px solid #333; color: #333; padding: 4px 12px; border-radius: 3px; font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; display: none; }
+    .action-btn.visible { display: inline-flex; }
+    .action-btn:hover { background: #333; color: white; }
+    .explanation-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin-top: 10px; }
+    .explanation-content.expanded { max-height: 500px; }
+    .explanation-box { background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 4px; padding: 12px; font-size: 0.85rem; line-height: 1.6; }
+    /* Kotoba Note - different style from explanation */
+    .kotoba-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin-top: 10px; }
+    .kotoba-content.expanded { max-height: 500px; }
+    .kotoba-box { background: #e8f0fe; border: 1px solid #1a73e8; border-radius: 4px; padding: 12px; font-size: 0.85rem; line-height: 1.6; }
+    .kotoba-box strong { color: #1a73e8; }
+    .loading { display: none; text-align: center; margin: 20px 0; }
+    .spinner { width: 30px; height: 30px; border: 2px solid #f0f0f0; border-top: 2px solid #333; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .results-card { background: white; border: 2px solid #333; padding: 25px; margin: 20px 0; display: none; font-family: 'Times New Roman', serif; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .results-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+    .results-title { font-size: 1.4rem; font-weight: bold; letter-spacing: 2px; }
+    .results-date { font-size: 0.8rem; color: #666; margin-top: 5px; }
+    .candidate-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 15px; }
+    .result-photo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #333; object-fit: cover; margin-bottom: 10px; }
+    .candidate-details { text-align: center; width: 100%; }
+    .detail-row { display: flex; justify-content: center; gap: 30px; margin: 5px 0; font-size: 0.95rem; }
+    .detail-label { font-weight: 600; color: #333; }
+    .score-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95rem; }
+    .score-table th { border-bottom: 2px solid #333; padding: 8px; text-align: left; }
+    .score-table td { padding: 10px 8px; border-bottom: 1px dotted #ccc; }
+    .score-table .total-row { font-weight: bold; border-top: 2px solid #333; }
+    .score-value { text-align: right; font-weight: 600; }
+    .judgment-box { text-align: center; padding: 15px; border: 2px solid #333; margin-top: 20px; }
+    .judgment-box.pass { background: #f1f8e9; border-color: #2e7d32; }
+    .judgment-box.fail { background: #ffebee; border-color: #c62828; }
+    .judgment-text { font-size: 1.5rem; font-weight: bold; }
+    .judgment-sub { font-size: 0.9rem; margin-top: 5px; }
+    .review-section { text-align: center; margin: 20px 0; }
+    .review-btn { background: #333; color: white; border: none; padding: 10px 30px; font-size: 1rem; cursor: pointer; border-radius: 4px; display: none; }
+    .review-btn.visible { display: inline-block; }
+    .review-btn:hover { background: #555; }
+    .footer { text-align: center; margin-top: 20px; padding: 15px; color: #666; font-size: 0.8rem; border-top: 1px solid #ddd; }
+    @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } .detail-row { flex-direction: column; gap: 5px; } .score-table { font-size: 0.85rem; } }
+
+    /* REST BREAK OVERLAY */
+    .rest-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .rest-overlay.show { display: flex; }
+    .rest-box {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 50px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .rest-box h2 {
+      font-size: 1.8rem;
+      color: #1a73e8;
+      margin-bottom: 10px;
+    }
+    .rest-box .rest-time {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #333;
+      margin: 15px 0;
+    }
+    .rest-box .rest-label {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .rest-box .rest-btn {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .rest-box .rest-btn:hover { background: #1557b0; }
+
+    /* BUILDER PANEL STYLES */
+    .builder-container { max-width: 1400px; margin: 20px auto; display: flex; gap: 20px; flex-wrap: wrap; }
+    .builder-editor { flex: 1.2; background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow-y: auto; max-height: 90vh; }
+    .builder-preview { flex: 0.9; background: #0e1a24; border-radius: 20px; padding: 20px; color: white; position: sticky; top: 20px; height: fit-content; }
+    .builder-preview h3 { color: #ffd966; margin-bottom: 12px; }
+    .code-preview { background: #102433; padding: 15px; border-radius: 12px; overflow-x: auto; white-space: pre-wrap; font-family: monospace; font-size: 0.65rem; max-height: 50vh; border: 1px solid #2d4b6e; }
+    .download-btn { background: #10b981; border: none; color: white; font-weight: bold; padding: 12px; border-radius: 40px; width: 100%; margin-top: 15px; cursor: pointer; }
+    .builder-stat { color: #b9d0f0; margin-top: 10px; text-align: center; font-size: 0.8rem; }
+    .section-card { background: #f8f9fa; border: 1px solid #ddd; border-radius: 16px; padding: 15px; margin-bottom: 20px; }
+    .section-title { display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+    .section-title input { flex: 1; font-size: 1.1rem; font-weight: bold; padding: 6px 12px; border: 1px solid #ccc; border-radius: 30px; }
+    .del-sec { background: #fee2e2; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
+    .mondai-editor { background: white; border-radius: 12px; padding: 12px; margin-bottom: 15px; border: 1px solid #e0e0e0; }
+    .mondai-header { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+    .mondai-header input { flex: 2; padding: 5px 12px; border: 1px solid #ccc; border-radius: 20px; }
+    .mondai-header input[type="number"] { width: 80px; }
+    .question-editor { background: #fefefe; border: 1px solid #eee; border-radius: 10px; padding: 10px; margin-top: 10px; }
+    .btn-sm { background: #f0f0f0; border: 1px solid #aaa; border-radius: 20px; padding: 4px 12px; margin: 4px; cursor: pointer; font-size: 0.7rem; }
+    .btn-primary { background: #333; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; margin-top: 8px; }
+    .flex-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .passage-editor { background: #f0f7ff; border: 1px solid #1a73e8; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+    .passage-editor textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; }
+    
+    /* Export/Import buttons */
+    .data-tools { display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap; }
+    .data-btn { background: #1a73e8; color: white; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-size: 0.85rem; }
+    .data-btn:hover { background: #1557b0; }
+    .data-btn.import-btn { background: #0f9d58; }
+    .data-btn.import-btn:hover { background: #0b7a44; }
+    #importFileInput { display: none; }
+
+    /* ========================================== */
+    /* 🔒 PRO PREMIUM ACCESS DESIGN - FIXED */
+    /* ========================================== */
+    
+    /* Access Container - Full Screen Overlay */
+    #accessContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+      padding: 20px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    
+    #accessContainer.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    
+    .access-card {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 48px 40px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: cardFadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    @keyframes cardFadeIn {
+      0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    .access-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 20%, rgba(108, 99, 255, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .access-card .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2.4rem;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    
+    .access-card .icon-wrapper.loading {
+      background: rgba(108, 99, 255, 0.15);
+      border: 2px solid rgba(108, 99, 255, 0.2);
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    
+    .access-card .icon-wrapper.locked {
+      background: rgba(239, 68, 68, 0.15);
+      border: 2px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .access-card .icon-wrapper.unlocked {
+      background: rgba(52, 211, 153, 0.15);
+      border: 2px solid rgba(52, 211, 153, 0.3);
+      animation: unlock-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .access-card .icon-wrapper .icon {
+      animation: icon-float 3s ease-in-out infinite;
+    }
+    
+    .access-card .icon-wrapper.locked .icon {
+      color: #f87171;
+    }
+    
+    .access-card .icon-wrapper.unlocked .icon {
+      color: #34d399;
+    }
+    
+    .access-card .icon-wrapper.loading .icon {
+      color: #a78bfa;
+      animation: spin 1.2s linear infinite;
+    }
+    
+    .access-card h1 {
+      color: #f1f5f9;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    
+    .access-card .sub-text {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+    
+    .access-card .sub-text.highlight {
+      color: #a78bfa;
+      font-weight: 500;
+    }
+    
+    .access-card .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+      margin: 20px 0;
+    }
+    
+    .access-card .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    
+    .access-card .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: white;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .access-card .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    
+    .access-card .btn-primary {
+      background: linear-gradient(135deg, #6c63ff, #4f46e5);
+      box-shadow: 0 4px 20px rgba(108, 99, 255, 0.35);
+    }
+    
+    .access-card .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 35px rgba(108, 99, 255, 0.5);
+    }
+    
+    .access-card .btn-primary:active {
+      transform: scale(0.97);
+    }
+    
+    .access-card .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+    }
+    
+    .access-card .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .access-card .btn-success {
+      background: linear-gradient(135deg, #34d399, #059669);
+      box-shadow: 0 4px 20px rgba(52, 211, 153, 0.35);
+    }
+    
+    .access-card .btn-success:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 35px rgba(52, 211, 153, 0.5);
+    }
+    
+    .access-card .contact-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    
+    .access-card .contact-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    
+    .access-card .contact-chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .access-card .contact-chip.phone {
+      background: linear-gradient(135deg, #22c55e, #15803d);
+    }
+    
+    .access-card .contact-chip.telegram {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    }
+    
+    .access-card .contact-chip.viber {
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    }
+    
+    .access-card .loader-ring {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 3px solid rgba(108, 99, 255, 0.1);
+      border-top: 3px solid #6c63ff;
+      animation: spin 0.8s linear infinite;
+      margin: 10px auto;
+    }
+    
+    .access-card .loader-text {
+      color: #94a3b8;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    
+    .access-card .loader-dots {
+      display: inline-flex;
+      gap: 4px;
+      margin-left: 4px;
+    }
+    
+    .access-card .loader-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #6c63ff;
+      animation: dot-bounce 1.4s ease-in-out infinite;
+    }
+    
+    .access-card .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .access-card .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+    
+    .access-card .icon-wrapper.expired {
+      background: rgba(148, 163, 184, 0.1);
+      border: 2px solid rgba(148, 163, 184, 0.15);
+    }
+    
+    .access-card .icon-wrapper.expired .icon {
+      color: #94a3b8;
+    }
+    
+    .access-card .expiry-date {
+      color: #f87171;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: rgba(239, 68, 68, 0.1);
+      padding: 6px 16px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Exam Content - Hidden until access granted */
+    #examContent {
+      display: none;
+    }
+    
+    #examContent.active {
+      display: block;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.2); }
+      70% { box-shadow: 0 0 0 20px rgba(108, 99, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(108, 99, 255, 0); }
+    }
+    
+    @keyframes unlock-pop {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes icon-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    
+    @keyframes dot-bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-8px); opacity: 1; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      .access-card {
+        padding: 32px 24px;
+        border-radius: 20px;
+      }
+      
+      .access-card .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        font-size: 2rem;
+      }
+      
+      .access-card h1 {
+        font-size: 1.3rem;
+      }
+      
+      .access-card .sub-text {
+        font-size: 0.85rem;
+      }
+      
+      .access-card .btn {
+        padding: 12px 20px;
+        font-size: 0.85rem;
+      }
+      
+      .access-card .contact-chip {
+        font-size: 0.7rem;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="builder-container">
+  <div class="builder-editor">
+    <h2>📝 JLPT N4 Builder · Kotoba Note (ဂျပန်→မြန်မာ)</h2>
+    <p style="color:#555; margin-bottom: 15px;">📝 Kotoba Note ခလုတ်ကို နှိပ်ရင် မေးခွန်းထဲက ဂျပန်စာလုံးတွေရဲ့ မြန်မာအဓိပ္ပါယ် ပြပေးမယ်။ (Explanation က သီးသန့်)</p>
+    
+    <div class="data-tools">
+      <button class="data-btn" id="exportDataBtn">📤 Export Data (JSON)</button>
+      <button class="data-btn import-btn" id="importDataBtn">📥 Import Data (JSON)</button>
+      <input type="file" id="importFileInput" accept=".json">
+    </div>
+    
+    <div id="sectionsList"></div>
+    <div class="flex-row" style="margin-top: 15px;">
+      <button class="btn-primary" id="addSectionBtn">➕ Add Section</button>
+      <button class="btn-primary" id="resetOriginalBtn">📋 Reset to Original N4</button>
+    </div>
+  </div>
+  <div class="builder-preview">
+    <h3>📄 FINAL HTML (Kotoba Note with Myanmar meanings)</h3>
+    <div class="code-preview" id="codePreview"></div>
+    <button class="download-btn" id="downloadHtmlBtn">⬇️ DOWNLOAD HTML FILE</button>
+    <div class="builder-stat" id="liveStat">Sections: 3 | Questions: 9</div>
+  </div>
+</div>
+
+<!-- REST BREAK OVERLAY -->
+<div class="rest-overlay" id="restOverlay">
+  <div class="rest-box">
+    <h2>☕ 30 Minutes Rest</h2>
+    <div class="rest-time">30:00</div>
+    <div class="rest-label">Please take a rest. Press Start to continue.</div>
+    <button class="rest-btn" id="restStartBtn">▶ Start Next Section</button>
+  </div>
+</div>
+
+<script>
+  // ========== DATA MODEL ==========
+  let sectionsData = [];
+  let nextQid = 1;
+
+  function getOriginalData() {
+    nextQid = 1;
+    return [
+      { id: "vocab", name: "Vocabulary", tabLabel: "語彙", mondais: [
+        { title: "問題1: 漢字の読み方", pointsEach: 1, questions: [
+          { qid: nextQid++, text: "ここは省略してもかまわない。", options: ["しょうかく","しょうらく","しょうじゃく","しょうりゃく"], correct: "4", 
+            explanation: '<strong>正解: 4 しょうりゃく (省略)</strong><br><strong>意味:</strong> "ဒီနေရာမှာ ချန်လှပ်ထားလည်း အဆင်ပြေတယ်"<br><strong>解説:</strong> 1.しょうかく(昇格)ရာထူးတိုး / 2.しょうらく(使用しない) / 3.しょうじゃく(小弱)အားနည်း / 4.しょうりゃく(省略)ချန်လှပ်',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 省略 (しょうりゃく) - ချန်လှပ်ခြင်း<br>• かまわない - အဆင်ပြေတယ် / ကိစ္စမရှိဘူး<br>• ここ - ဒီနေရာ',
+            image: "" }
+        ]},
+        { title: "問題2: 言葉の意味", pointsEach: 1, questions: [
+          { qid: nextQid++, text: "研修内容は、日程も含めて、今日中にお知らせします。", options: ["ふくめて","さだめて","かためて","まとめて"], correct: "1",
+            explanation: '<strong>正解: 1 ふくめて (含めて)</strong><br><strong>意味:</strong> "သင်တန်းအကြောင်းအရာအပါအဝင် အချိန်ဇယားကိုပါ ဒီနေ့အတွင်း အသိပေးပါမယ်"',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 研修 (けんしゅう) - သင်တန်း<br>• 内容 (ないよう) - အကြောင်းအရာ<br>• 日程 (にってい) - အချိန်ဇယား<br>• 含めて (ふくめて) - အပါအဝင်<br>• お知らせします - အသိပေးပါမည်',
+            image: "" }
+        ]},
+        { title: "問題3: 文脈に合う言葉", pointsEach: 1, questions: [
+          { qid: nextQid++, text: "この機械の操作は（ ）難しい。", options: ["わりに","かなり","めったに","たまに"], correct: "2",
+            explanation: '<strong>正解: 2 かなり</strong><br><strong>意味:</strong> "ဒီစက်ရဲ့ လုပ်ဆောင်ချက်က အတော်လေး ခက်ခဲတယ်"',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 機械 (きかい) - စက်<br>• 操作 (そうさ) - လုပ်ဆောင်ချက် / ထိန်းချုပ်မှု<br>• 難しい (むずかしい) - ခက်ခဲသော<br>• かなり - အတော်လေး',
+            image: "" }
+        ]},
+        { title: "問題4: 同じ意味の言葉", pointsEach: 2, questions: [
+          { qid: nextQid++, text: "新しい___を始めたいです。", options: ["しゅみ","しゅうみ","しゅみ","しゅうみ"], correct: "3",
+            explanation: '<strong>正解: 3 しゅみ (趣味)</strong><br><strong>意味:</strong> "ဝါသနာအသစ်တစ်ခု စတင်ချင်တယ်"',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 新しい (あたらしい) - အသစ်<br>• 趣味 (しゅみ) - ဝါသနာ<br>• 始めたい (はじめたい) - စတင်ချင်သည်',
+            image: "" }
+        ]},
+        { title: "問題5: 言葉の使い方", pointsEach: 2, questions: [
+          { qid: nextQid++, text: "佐藤さんはおそらく来ないと思う。", options: ["たぶん","たしか","やはり","ぜったい"], correct: "1",
+            explanation: '<strong>正解: 1 たぶん</strong><br><strong>意味:</strong> "ဆာတိုးဆန် ဖြစ်နိုင်တယ် မလာဘူး ထင်တယ်"',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 佐藤さん (さとうさん) - ဆာတိုးဆန်<br>• おそらく - ဖြစ်နိုင်သည်<br>• 来ない (こない) - မလာ<br>• たぶん - ဖြစ်နိုင်တယ်',
+            image: "" }
+        ]}
+      ]},
+      { id: "grammar", name: "Grammar", tabLabel: "文法・読解", mondais: [
+        { title: "読解問題", pointsEach: 1, isReading: true, passage: "日本の会社では、朝の挨拶が大切です。「おはようございます」と元気に言いましょう。また、帰る時は「お先に失礼します」と言ってから帰ります。これらの挨拶は、職場の人間関係を良くするためにとても重要です。", passageImage: "", questions: [
+          { qid: nextQid++, text: "日本の会社で朝の挨拶はどうですか。", options: ["必要ない","大切","夜の挨拶が大切","挨拶しなくていい"], correct: "2",
+            explanation: '<strong>正解: 2</strong><br>「朝の挨拶が大切です」と書いてあります。',
+            kotoba: '<strong>📖 言葉ノート</strong><br>• 会社 (かいしゃ) - ကုမ္ပဏီ<br>• 挨拶 (あいさつ) - နှုတ်ဆက်ခြင်း<br>• 大切 (たいせつ) - အရေးကြီးသော',
+            image: "" },
+          { qid: nextQid++, text: "帰る時は何と言いますか。", options: ["おはようございます","こんにちは","お先に失礼します","ありがとう"], correct: "3",
+            explanation: '<strong>正解: 3</strong><br>「帰る時は「お先に失礼します」と言ってから帰ります」と書いてあります。',
+            kotoba: '<strong>📖 言葉ノート</strong><br>• 帰る (かえる) - ပြန်သည်<br>• お先に失礼します (おさきにしつれいします) - ကျွန်တော်အရင်ပြန်ပါတယ်',
+            image: "" }
+        ]},
+        { title: "読解問題2", pointsEach: 1, isReading: true, passage: "日本では、季節の変わり目に「時候の挨拶」というものを手紙に書きます。春なら「桜の花が咲き始めました」、夏なら「暑さが厳しくなりました」など、その季節に合った言葉を選びます。これは、相手への気遣いを表す大切な習慣です。", passageImage: "", questions: [
+          { qid: nextQid++, text: "「時候の挨拶」とは何ですか。", options: ["季節の言葉","いつも同じ挨拶","目上の人だけに書くもの","必要ないもの"], correct: "1",
+            explanation: '<strong>正解: 1</strong><br>「時候の挨拶」は季節に合った言葉を選ぶものです。',
+            kotoba: '<strong>📖 言葉ノート</strong><br>• 季節 (きせつ) - ရာသီ<br>• 時候の挨拶 (じこうのあいさつ) - ရာသီအလိုက်နှုတ်ဆက်စကား<br>• 手紙 (てがみ) - စာ',
+            image: "" },
+          { qid: nextQid++, text: "時候の挨拶は何のために書きますか。", options: ["相手への気遣い","自分の趣味","仕事のため","時間をつぶすため"], correct: "1",
+            explanation: '<strong>正解: 1</strong><br>「相手への気遣いを表す大切な習慣です」と書いてあります。',
+            kotoba: '<strong>📖 言葉ノート</strong><br>• 気遣い (きづかい) - စေတနာ၊ ဂရုစိုက်မှု<br>• 習慣 (しゅうかん) - အလေ့အထ',
+            image: "" }
+        ]}
+      ]},
+      { id: "listening", name: "Listening", tabLabel: "聴解", mondais: [
+        { title: "聴解問題", pointsEach: null, listeningAudio: "https://www2.cs.uic.edu/~i101/SoundFiles/taunt.wav", questions: [
+          { qid: nextQid++, text: "男の人は何をしなければなりませんか。", options: ["レポートを書く","資料をコピーする","会議に出席する","メールを送る"], correct: "2",
+            explanation: '<strong>正解: 2</strong><br>"資料をコピーしておいてください" လို့ ပြောထားတာကြောင့် အဖြေမှန်က 2 ဖြစ်ပါတယ်။',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 男の人 (おとこのひと) - အမျိုးသား<br>• レポート - အစီရင်ခံစာ<br>• 資料 (しりょう) - စာရွက်စာတမ်း<br>• コピーする - ကူးယူသည်<br>• 会議 (かいぎ) - အစည်းအဝေး',
+            image: "" },
+          { qid: nextQid++, text: "二人はどこで会いますか。", options: ["映画館","レストラン","図書館","公園"], correct: "1",
+            explanation: '<strong>正解: 1</strong><br>"映画館の前で待ち合わせましょう" လို့ ပြောထားတာကြောင့် အဖြေမှန်က 1 ဖြစ်ပါတယ်။',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 二人 (ふたり) - လူနှစ်ယောက်<br>• 会う (あう) - တွေ့သည်<br>• 映画館 (えいがかん) - ရုပ်ရှင်ရုံ<br>• 待ち合わせる (まちあわせる) - စောင့်ဆိုင်ရန် ချိန်းသည်',
+            image: "" },
+          { qid: nextQid++, text: "会議はどうなりましたか。", options: ["電車が遅れている","バスが来ない","会議が中止","台風が来る"], correct: "3",
+            explanation: '<strong>正解: 3</strong><br>"台風のため会議は中止になりました" လို့ ပြောထားတာကြောင့် အဖြေမှန်က 3 ဖြစ်ပါတယ်။',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 会議 (かいぎ) - အစည်းအဝေး<br>• 中止 (ちゅうし) - ဖျက်သိမ်းခြင်း<br>• 台風 (たいふう) - မုန်တိုင်း<br>• ため - သောကြောင့်',
+            image: "" },
+          { qid: nextQid++, text: "食事の前に何と言いますか。", options: ["ありがとう","ごめんなさい","おめでとう","いただきます"], correct: "4",
+            explanation: '<strong>正解: 4</strong><br>"いただきます" သည် ထမင်းစားခါနီး ပြောသော စကားဖြစ်ပါတယ်။',
+            kotoba: '<strong>📖 言葉ノート (ဂျပန်→မြန်မာ)</strong><br>• 食事 (しょくじ) - ထမင်းစားခြင်း<br>• 前 (まえ) - အရင်<br>• いただきます - ထမင်းစားတော့မယ် (ရိုသေစကား)<br>• ありがとう - ကျေးဇူးတင်ပါတယ်',
+            image: "" }
+        ]}
+      ]}
+    ];
+  }
+
+  function renumberAllQids() {
+    let counter = 1;
+    for (let sec of sectionsData) {
+      for (let m of sec.mondais) {
+        for (let q of m.questions) {
+          q.qid = counter++;
+        }
+      }
+    }
+    nextQid = counter;
+  }
+
+  function addNewSection() {
+    sectionsData.push({ id: "sec"+Date.now(), name: "New Section", tabLabel: "新", mondais: [] });
+    renderEditor();
+  }
+
+  function addMondai(sectionIdx) {
+    sectionsData[sectionIdx].mondais.push({ title: "新モンダイ", pointsEach: 1, questions: [], isReading: false, passage: "", passageImage: "", listeningAudio: "" });
+    renderEditor();
+  }
+
+  function addQuestion(sectionIdx, mondaiIdx) {
+    let newQ = { qid: 0, text: "新しい問題文", options: ["選択肢1","選択肢2","選択肢3","選択肢4"], correct: "1", explanation: "解説を入力", kotoba: "📖 言葉ノート", image: "" };
+    sectionsData[sectionIdx].mondais[mondaiIdx].questions.push(newQ);
+    renumberAllQids();
+    renderEditor();
+  }
+
+  function deleteQuestion(sectionIdx, mondaiIdx, qid) {
+    let qlist = sectionsData[sectionIdx].mondais[mondaiIdx].questions;
+    sectionsData[sectionIdx].mondais[mondaiIdx].questions = qlist.filter(q => q.qid !== qid);
+    renumberAllQids();
+    renderEditor();
+  }
+
+  function deleteMondai(sectionIdx, mondaiIdx) {
+    sectionsData[sectionIdx].mondais.splice(mondaiIdx, 1);
+    renderEditor();
+  }
+
+  function deleteSection(sectionIdx) {
+    sectionsData.splice(sectionIdx, 1);
+    if (sectionsData.length === 0) sectionsData.push({ id: "default", name: "Vocabulary", tabLabel: "語彙", mondais: [] });
+    renderEditor();
+  }
+
+  function renderEditor() {
+    let html = '';
+    for (let sIdx = 0; sIdx < sectionsData.length; sIdx++) {
+      let sec = sectionsData[sIdx];
+      html += `<div class="section-card"><div class="section-title"><input value="${escapeHtml(sec.name)}" onchange="updateSectionName(${sIdx}, this.value)"><input value="${escapeHtml(sec.tabLabel)}" style="width:100px;" onchange="updateTabLabel(${sIdx}, this.value)"><button class="del-sec" onclick="deleteSection(${sIdx})">✕</button></div>`;
+      for (let mIdx = 0; mIdx < sec.mondais.length; mIdx++) {
+        let m = sec.mondais[mIdx];
+        let isReading = m.isReading || false;
+        let isListening = (sIdx === 2) || false;
+        html += `<div class="mondai-editor"><div class="mondai-header">
+          <input value="${escapeHtml(m.title)}" onchange="updateMondaiTitle(${sIdx}, ${mIdx}, this.value)">
+          <span>点:</span>
+          <input type="number" value="${m.pointsEach || 1}" step="0.5" style="width:70px;" onchange="updateMondaiPoints(${sIdx}, ${mIdx}, this.value)">
+          <label style="font-size:0.7rem;"><input type="checkbox" ${isReading?'checked':''} onchange="toggleReading(${sIdx}, ${mIdx}, this.checked)"> 📖 Reading</label>
+          <button class="btn-sm" onclick="deleteMondai(${sIdx}, ${mIdx})">🗑</button>
+        </div>`;
+        
+        if (isListening) {
+          html += `<div class="passage-editor" style="background:#f0f0f0; border-color:#666;">
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span>🎧 Main Audio:</span>
+              <input value="${escapeHtml(m.listeningAudio || '')}" placeholder="audio.mp3" style="flex:1; padding:4px 8px; border:1px solid #ccc; border-radius:4px;" onchange="updateListeningAudio(${sIdx}, ${mIdx}, this.value)">
+            </div>
+          </div>`;
+        }
+        
+        if (isReading) {
+          html += `<div class="passage-editor">
+            <textarea rows="4" placeholder="Reading Passage (စာပိုဒ်)" onchange="updatePassage(${sIdx}, ${mIdx}, this.value)">${escapeHtml(m.passage || '')}</textarea>
+            <div style="margin-top:5px; display:flex; gap:6px; align-items:center;">
+              <span>🖼️ Image URL:</span>
+              <input value="${escapeHtml(m.passageImage || '')}" placeholder="image.jpg" style="flex:1; padding:4px 8px; border:1px solid #ccc; border-radius:4px;" onchange="updatePassageImage(${sIdx}, ${mIdx}, this.value)">
+            </div>
+          </div>`;
+        }
+        
+        for (let q of m.questions) {
+          html += `<div class="question-editor"><div class="flex-row"><strong>Q${q.qid}</strong><input value="${escapeHtml(q.text)}" style="flex:1;" onchange="updateQText(${sIdx}, ${mIdx}, ${q.qid}, this.value)"></div>`;
+          html += `<div class="options-grid" style="grid-template-columns:1fr 1fr; gap:6px;">`;
+          for (let i=0;i<4;i++) {
+            let optVal = q.options[i] || `選択肢${i+1}`;
+            html += `<div style="display:flex; align-items:center; gap:6px;"><input type="radio" name="temp_${q.qid}" value="${i+1}" ${q.correct == (i+1) ? 'checked' : ''} onchange="setCorrect(${sIdx}, ${mIdx}, ${q.qid}, ${i+1})"><input value="${escapeHtml(optVal)}" style="flex:1;" onchange="updateOption(${sIdx}, ${mIdx}, ${q.qid}, ${i}, this.value)"></div>`;
+          }
+          html += `</div><textarea rows="2" style="width:100%; margin:6px 0;" placeholder="Explanation (အဖြေရှင်းလင်းချက်)" onchange="updateExplanation(${sIdx}, ${mIdx}, ${q.qid}, this.value)">${escapeHtml(q.explanation || '')}</textarea>`;
+          html += `<textarea rows="3" style="width:100%; margin:6px 0;" placeholder="Kotoba Note (ဂျပန်စာလုံးများ၏ မြန်မာအဓိပ္ပါယ်)" onchange="updateKotoba(${sIdx}, ${mIdx}, ${q.qid}, this.value)">${escapeHtml(q.kotoba || '')}</textarea>`;
+          html += `<div class="flex-row"><span>🖼️</span><input value="${escapeHtml(q.image || '')}" placeholder="image.jpg" style="flex:1;" onchange="updateImage(${sIdx}, ${mIdx}, ${q.qid}, this.value)"><button class="btn-sm" onclick="deleteQuestion(${sIdx}, ${mIdx}, ${q.qid})">🗑 Remove</button></div>`;
+          html += `</div>`;
+        }
+        html += `<button class="btn-sm" style="margin-top:8px;" onclick="addQuestion(${sIdx}, ${mIdx})">➕ မေးခွန်းထည့်</button>`;
+        html += `</div>`;
+      }
+      html += `<button class="btn-sm" onclick="addMondai(${sIdx})">📌 Add Mondai Group</button>`;
+      html += `</div>`;
+    }
+    document.getElementById('sectionsList').innerHTML = html;
+    generateFullHtml();
+  }
+
+  window.updateSectionName = (idx, val) => { sectionsData[idx].name = val; generateFullHtml(); };
+  window.updateTabLabel = (idx, val) => { sectionsData[idx].tabLabel = val; generateFullHtml(); };
+  window.updateMondaiTitle = (sIdx, mIdx, val) => { sectionsData[sIdx].mondais[mIdx].title = val; generateFullHtml(); };
+  window.updateMondaiPoints = (sIdx, mIdx, val) => { sectionsData[sIdx].mondais[mIdx].pointsEach = parseFloat(val); generateFullHtml(); };
+  window.updateQText = (sIdx, mIdx, qid, val) => { let q = findQ(sIdx, mIdx, qid); if(q) q.text = val; generateFullHtml(); };
+  window.updateOption = (sIdx, mIdx, qid, optIdx, val) => { let q = findQ(sIdx, mIdx, qid); if(q) { while(q.options.length <= optIdx) q.options.push(''); q.options[optIdx] = val; } generateFullHtml(); };
+  window.setCorrect = (sIdx, mIdx, qid, val) => { let q = findQ(sIdx, mIdx, qid); if(q) q.correct = val.toString(); generateFullHtml(); };
+  window.updateExplanation = (sIdx, mIdx, qid, val) => { let q = findQ(sIdx, mIdx, qid); if(q) q.explanation = val; generateFullHtml(); };
+  window.updateKotoba = (sIdx, mIdx, qid, val) => { let q = findQ(sIdx, mIdx, qid); if(q) q.kotoba = val; generateFullHtml(); };
+  window.updateImage = (sIdx, mIdx, qid, val) => { let q = findQ(sIdx, mIdx, qid); if(q) q.image = val; generateFullHtml(); };
+  window.toggleReading = (sIdx, mIdx, val) => { sectionsData[sIdx].mondais[mIdx].isReading = val; renderEditor(); };
+  window.updatePassage = (sIdx, mIdx, val) => { sectionsData[sIdx].mondais[mIdx].passage = val; generateFullHtml(); };
+  window.updatePassageImage = (sIdx, mIdx, val) => { sectionsData[sIdx].mondais[mIdx].passageImage = val; generateFullHtml(); };
+  window.updateListeningAudio = (sIdx, mIdx, val) => { sectionsData[sIdx].mondais[mIdx].listeningAudio = val; generateFullHtml(); };
+  window.deleteQuestion = deleteQuestion;
+  window.deleteMondai = deleteMondai;
+  window.deleteSection = deleteSection;
+  window.addQuestion = addQuestion;
+  window.addMondai = addMondai;
+
+  function findQ(sIdx, mIdx, qid) {
+    let qlist = sectionsData[sIdx].mondais[mIdx].questions;
+    return qlist.find(q => q.qid === qid);
+  }
+
+  function buildSectionHtml(sec) {
+    let html = '';
+    for (let m of sec.mondais) {
+      let pointsLabel = (m.pointsEach && m.pointsEach > 0) ? `${m.pointsEach}点 × ${m.questions.length}問` : '';
+      html += `<div class="mondai-group"><div class="mondai-title"><span>${escapeHtml(m.title)}</span><span class="mondai-points">${pointsLabel}</span></div>`;
+      
+      if (m.isReading && m.passage) {
+        html += `<div class="reading-passage">`;
+        if (m.passageImage) {
+          html += `<img src="${escapeHtml(m.passageImage)}" class="passage-image" alt="Passage Image">`;
+        }
+        html += `<h4>📖 読解文</h4><p>${escapeHtml(m.passage)}</p></div>`;
+      }
+      
+      for (let idx=0; idx<m.questions.length; idx++) {
+        let q = m.questions[idx];
+        let qNum = idx+1;
+        let optsHtml = '';
+        for (let i=0;i<4;i++) {
+          optsHtml += `<label class="option-label"><input type="radio" name="q${q.qid}" value="${i+1}" onchange="markAnswered(${q.qid})"> ${i+1} ${escapeHtml(q.options[i] || '')}</label>`;
+        }
+        let imageHtml = '';
+        if (q.image) {
+          imageHtml = `<img src="${escapeHtml(q.image)}" class="passage-image" alt="Question Image" style="max-width:100%; margin:10px 0;">`;
+        }
+        html += `<div class="question-block" data-qid="${q.qid}" data-points="${m.pointsEach || 1}" data-correct="${q.correct}" data-section="${sec.id || ''}">
+          <div class="question-header"><span class="question-number">${qNum}</span><span class="question-points">${m.pointsEach || 1}点</span></div>
+          <div class="question-text">${escapeHtml(q.text)}</div>
+          ${imageHtml}
+          <div class="options-grid">${optsHtml}</div>
+          <div class="action-buttons">
+            <button class="action-btn explanation-btn" onclick="toggleExplanation(this)">📚 説明 (Explanation)</button>
+            <button class="action-btn kotoba-btn" onclick="toggleKotoba(this)">📝 言葉ノート (Kotoba Note)</button>
+          </div>
+          <div class="explanation-content"><div class="explanation-box">${q.explanation || 'အဖြေရှင်းလင်းချက် မရှိသေးပါ။'}</div></div>
+          <div class="kotoba-content"><div class="kotoba-box">${q.kotoba || '📖 ဂျပန်စာလုံးများ၏ အဓိပ္ပါယ်ကို ဤနေရာတွင် ထည့်ပေးထားပါမည်။'}</div></div>
+        </div>`;
+      }
+      html += `</div>`;
+    }
+    return html;
+  }
+
+  function buildListeningSectionWithSimplePlayer(sec) {
+    let mainAudioSrc = "";
+    if(sec.mondais.length > 0 && sec.mondais[0].listeningAudio) {
+      mainAudioSrc = sec.mondais[0].listeningAudio;
+    }
+    let questionsHtml = buildSectionHtml(sec);
+    let playerHtml = `
+      <div class="listening-player-container" id="listeningPlayerBox">
+        <div class="simple-audio-wrapper" id="audioWrapper">
+          <button class="play-only-btn" id="playOnlyBtn">▶</button>
+          <button class="pause-btn" id="pauseBtn" style="display:none;">⏸</button>
+          <input type="range" class="seek-slider" id="seekSlider" value="0" step="1" style="display:none; flex:1;">
+          <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+        </div>
+        <audio id="listeningMainAudio" src="${escapeHtml(mainAudioSrc)}" preload="auto"></audio>
+      </div>
+    `;
+    return playerHtml + questionsHtml;
+  }
+
+  let restPendingSection = null;
+
+  function generateFullHtml() {
+    let vocabSec = sectionsData[0] || { id:"vocab", name:"Vocabulary", tabLabel:"語彙", mondais: [] };
+    let grammarSec = sectionsData[1] || { id:"grammar", name:"Grammar", tabLabel:"文法・読解", mondais: [] };
+    let listeningSec = sectionsData[2] || { id:"listening", name:"Listening", tabLabel:"聴解", mondais: [] };
+    
+    let vocabHtml = buildSectionHtml(vocabSec);
+    let grammarHtml = buildSectionHtml(grammarSec);
+    let listeningHtml = buildListeningSectionWithSimplePlayer(listeningSec);
+    
+    // ==========================================
+    // 🔒 GENERATE HTML WITH FIXED PREMIUM CHECK
+    // ==========================================
+    let finalHtml = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>JLPT N4 · Kotoba Note (Japanese to Myanmar)</title>
+<!-- 🔒 SECURITY: Firebase Libraries -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"><\/script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"><\/script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"><\/script>
+<style>${document.querySelector('style').innerHTML}<\/style>
+</head>
+<body>
+
+<!-- 🔒 SECURITY: Premium Access Check - Full Screen Overlay -->
+<div id="accessContainer">
+  <div class="access-card" id="accessCard">
+    <!-- Loading State -->
+    <div id="loadingState">
+      <div class="icon-wrapper loading">
+        <span class="icon">🔐</span>
+      </div>
+      <h1>Verifying Access</h1>
+      <p class="sub-text">Please wait while we check your premium access...</p>
+      <div class="loader-ring"></div>
+      <p class="loader-text">Checking <span class="loader-dots"><span>.</span><span>.</span><span>.</span></span></p>
+    </div>
+    
+    <!-- Not Logged In -->
+    <div id="notLoggedInState" class="hidden">
+      <div class="icon-wrapper locked">
+        <span class="icon">🔒</span>
+      </div>
+      <h1>Login Required</h1>
+      <p class="sub-text">Please login to access this premium exam paper.</p>
+      <div class="divider"></div>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="loginBtn">🔑 Login with Google</button>
+        <button class="btn btn-secondary" id="backBtn">← Go Back</button>
+      </div>
+    </div>
+    
+    <!-- No Premium Access -->
+    <div id="noAccessState" class="hidden">
+      <div class="icon-wrapper locked">
+        <span class="icon">🔒</span>
+      </div>
+      <h1>Premium Required</h1>
+      <p class="sub-text">You don't have premium access to this paper.</p>
+      <p class="sub-text highlight">🎯 Get Premium Access Now!</p>
+      <div class="divider"></div>
+      <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:8px;">Contact us to purchase:</p>
+      <div class="contact-row">
+        <a href="tel:09773883159" class="contact-chip phone">📞 Call</a>
+        <a href="https://t.me/shinegyi123" class="contact-chip telegram">💬 Telegram</a>
+        <a href="viber://contact?number=959773883159" class="contact-chip viber">📱 Viber</a>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="backBtn2">← Go Back</button>
+      </div>
+    </div>
+    
+    <!-- Access Expired -->
+    <div id="expiredState" class="hidden">
+      <div class="icon-wrapper expired">
+        <span class="icon">⏰</span>
+      </div>
+      <h1>Access Expired</h1>
+      <p class="sub-text">Your premium access has expired.</p>
+      <div class="expiry-date" id="expiryDateText">Please renew to continue</div>
+      <div class="divider"></div>
+      <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:8px;">Renew now:</p>
+      <div class="contact-row">
+        <a href="tel:09773883159" class="contact-chip phone">📞 Call</a>
+        <a href="https://t.me/shinegyi123" class="contact-chip telegram">💬 Telegram</a>
+        <a href="viber://contact?number=959773883159" class="contact-chip viber">📱 Viber</a>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="backBtn3">← Go Back</button>
+      </div>
+    </div>
+    
+    <!-- Access Granted -->
+    <div id="accessGrantedState" class="hidden">
+      <div class="icon-wrapper unlocked">
+        <span class="icon">✅</span>
+      </div>
+      <h1>Access Granted</h1>
+      <p class="sub-text">You have premium access to this paper.</p>
+      <div class="divider"></div>
+      <div class="btn-group">
+        <button class="btn btn-success" id="showExamBtn">📝 Start Exam</button>
+        <button class="btn btn-secondary" id="backBtn4">← Go Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 📝 EXAM CONTENT (Hidden until access granted) -->
+<div id="examContent">
+<div class="modal-overlay" id="registerModal"><div class="modal-content"><div class="modal-title">JLPT N4 Registration</div><div class="photo-upload-container"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23e0e0e0'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='%23999'%3E📷%3C/text%3E%3C/svg%3E" class="photo-preview" id="photoPreview"><input type="file" id="photoInput" accept="image/*"><label for="photoInput" class="upload-btn">Choose Photo</label></div><div class="modal-form"><input type="text" class="modal-input" id="modalName" placeholder="Full Name" value="Shine Gyi"><input type="date" class="modal-input" id="modalDob" value="1995-05-15"><button class="modal-btn" id="startTestBtn">Start Test</button></div></div></div>
+<div class="sticky-header"><div class="header-left"><button class="back-btn" onclick="goBack()"><span>←</span> <span>Back</span></button></div><div class="timer-compact" id="sectionTimer"><span>⏱️</span><span id="timerDisplay">25:00</span></div></div>
+<div class="section-tabs"><button class="tab-btn active" id="section1Btn" onclick="switchToSection(1)">${escapeHtml(vocabSec.tabLabel || '語彙')}</button><button class="tab-btn" id="section2Btn" onclick="switchToSection(2)" disabled>${escapeHtml(grammarSec.tabLabel || '文法・読解')}</button><button class="tab-btn" id="section3Btn" onclick="switchToSection(3)" disabled>${escapeHtml(listeningSec.tabLabel || '聴解')}</button></div>
+<div class="main-container"><div class="section-container active" id="section1">${vocabHtml}<div class="section-footer"><button class="section-end-btn" onclick="endSection(1)">End Section</button></div></div><div class="section-container" id="section2">${grammarHtml}<div class="section-footer"><button class="section-end-btn" onclick="endSection(2)">End Section</button></div></div><div class="section-container" id="section3">${listeningHtml}<div class="section-footer"><button class="section-end-btn" onclick="endSection(3)">End Section</button></div></div><div class="loading"><div class="spinner"></div></div><div class="results-card" id="resultsCard"><div class="results-header"><div class="results-title">JLPT N4 SCORE REPORT</div><div class="results-date" id="reportDate"></div></div><div class="candidate-section"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23e0e0e0'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle' fill='%23999'%3E📷%3C/text%3E%3C/svg%3E" class="result-photo" id="resultPhoto"><div class="candidate-details"><div class="detail-row"><span class="detail-label">Name:</span><span id="reportName">Shine Gyi</span></div><div class="detail-row"><span class="detail-label">Birth:</span><span id="reportDob">15/05/1995</span></div><div class="detail-row"><span class="detail-label">ID:</span><span id="reportId">N4-2024001</span></div></div></div><table class="score-table"><thead><tr><th>Section</th><th>Score</th><th>Status</th></tr></thead><tbody><tr><td><strong>言語知識 (語彙・文法・読解)</strong></td><td class="score-value" id="languageScore">0/120</td><td id="languageStatus">-</td></tr><tr><td>聴解</td><td class="score-value" id="listeningScore">0/60</td><td id="listeningStatus">-</td></tr><tr class="total-row"><td><strong>総合得点</strong></td><td class="score-value" id="totalScore">0/180</td><td id="totalStatus">-</td></tr></tbody></table><div class="judgment-box" id="judgmentBox"><div class="judgment-text" id="judgmentText">-</div><div class="judgment-sub" id="judgmentSub"></div></div></div><div class="review-section"><button class="review-btn" id="reviewBtn" onclick="reviewAnswers()">Review Answers</button></div><div class="footer"><p>JLPT N4 • 📚 説明 = အဖြေရှင်းလင်းချက် • 📝 言葉ノート = ဂျပန်စာလုံးများ၏ မြန်မာအဓိပ္ပါယ်</p></div></div>
+
+<!-- REST BREAK OVERLAY -->
+<div class="rest-overlay" id="restOverlay">
+  <div class="rest-box">
+    <h2>☕ 30 Minutes Rest</h2>
+    <div class="rest-time">30:00</div>
+    <div class="rest-label">Please take a rest. Press Start to continue.</div>
+    <button class="rest-btn" id="restStartBtn">▶ Start Next Section</button>
+  </div>
+</div>
+</div>
+
+<!-- 🔒 SECURITY: JavaScript -->
+<script>
+// Firebase Config
+const firebaseConfig = {
+    apiKey: "AIzaSyDpP60mQhmubr_ke_yakd_f9_RPlRR7Ips",
+    authDomain: "jlpt-premium-ea4aa.firebaseapp.com",
+    projectId: "jlpt-premium-ea4aa",
+    storageBucket: "jlpt-premium-ea4aa.firebasestorage.app",
+    messagingSenderId: "245412830191",
+    appId: "1:245412830191:web:486c32933b37ae23dab41a"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// DOM Elements
+const accessContainer = document.getElementById('accessContainer');
+const loadingState = document.getElementById('loadingState');
+const notLoggedInState = document.getElementById('notLoggedInState');
+const noAccessState = document.getElementById('noAccessState');
+const expiredState = document.getElementById('expiredState');
+const accessGrantedState = document.getElementById('accessGrantedState');
+const examContent = document.getElementById('examContent');
+const expiryDateText = document.getElementById('expiryDateText');
+
+function showState(state) {
+    loadingState.classList.add('hidden');
+    notLoggedInState.classList.add('hidden');
+    noAccessState.classList.add('hidden');
+    expiredState.classList.add('hidden');
+    accessGrantedState.classList.add('hidden');
+    
+    if (state === 'loading') loadingState.classList.remove('hidden');
+    else if (state === 'notLoggedIn') notLoggedInState.classList.remove('hidden');
+    else if (state === 'noAccess') noAccessState.classList.remove('hidden');
+    else if (state === 'expired') expiredState.classList.remove('hidden');
+    else if (state === 'granted') accessGrantedState.classList.remove('hidden');
+}
+
+function checkAccess(user) {
+    if (!user) {
+        showState('notLoggedIn');
+        return;
+    }
+    
+    db.collection('premium_access').doc(user.email).get()
+        .then((doc) => {
+            if (!doc.exists) {
+                showState('noAccess');
+                return;
+            }
+            
+            const data = doc.data();
+            const now = new Date();
+            
+            let hasAnyAccess = false;
+            let expiryDate = null;
+            
+            if (data.n4Access && data.n4Access.length > 0) {
+                const exp = data.n4ExpiryDate ? data.n4ExpiryDate.toDate() : null;
+                if (!exp || now <= exp) {
+                    hasAnyAccess = true;
+                    expiryDate = exp;
+                }
+            }
+            if (data.n3Access && data.n3Access.length > 0) {
+                const exp = data.n3ExpiryDate ? data.n3ExpiryDate.toDate() : null;
+                if (!exp || now <= exp) {
+                    hasAnyAccess = true;
+                    expiryDate = exp;
+                }
+            }
+            if (data.n2Access && data.n2Access.length > 0) {
+                const exp = data.n2ExpiryDate ? data.n2ExpiryDate.toDate() : null;
+                if (!exp || now <= exp) {
+                    hasAnyAccess = true;
+                    expiryDate = exp;
+                }
+            }
+            
+            if (!hasAnyAccess) {
+                showState('noAccess');
+                return;
+            }
+            
+            if (expiryDate && now > expiryDate) {
+                expiryDateText.textContent = 'Expired on: ' + expiryDate.toLocaleDateString();
+                showState('expired');
+                return;
+            }
+            
+            showState('granted');
+        })
+        .catch((error) => {
+            console.error('Access check error:', error);
+            showState('noAccess');
+        });
+}
+
+// Show Exam Button - Hide Access Container, Show Exam Content
+document.getElementById('showExamBtn').addEventListener('click', function() {
+    // Hide access container with animation
+    accessContainer.classList.add('hidden');
+    // Show exam content
+    examContent.classList.add('active');
+    // Initialize listening player after a short delay
+    setTimeout(function() {
+        if (document.getElementById('listeningMainAudio')) initListeningPlayer();
+    }, 500);
+});
+
+// Login Button
+document.getElementById('loginBtn').addEventListener('click', async () => {
+    try {
+        await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    } catch (e) {
+        alert('Login failed. Please try again.');
+    }
+});
+
+// Back buttons
+const goBack = () => { window.location.href = '../index.html'; };
+document.getElementById('backBtn').addEventListener('click', goBack);
+document.getElementById('backBtn2').addEventListener('click', goBack);
+document.getElementById('backBtn3').addEventListener('click', goBack);
+document.getElementById('backBtn4').addEventListener('click', goBack);
+
+// Auth State
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        checkAccess(user);
+    } else {
+        showState('loading');
+        checkAccess(null);
+    }
+});
+
+// Start with loading
+showState('loading');
+
+// ==========================================
+// ORIGINAL TEST FUNCTIONS
+// ==========================================
+let currentSection=1, timers=[null,null,null], timeLeft=[1500,3300,2100], sectionsCompleted=[false,false,false];
+let userAnswers = {1:{},2:{},3:{}};
+let maxRawLang = 0, maxRawListening = 0;
+let hasPlayedListening = false, isReviewMode = false, audioEl = null;
+
+function formatTime(secs) { let m=Math.floor(secs/60); let s=Math.floor(secs%60); return m+":"+(s<10?"0"+s:s); }
+
+document.getElementById('photoInput').addEventListener('change',function(e){let f=e.target.files[0];if(f){let r=new FileReader();r.onload=function(ev){document.getElementById('photoPreview').src=ev.target.result;sessionStorage.setItem('candidatePhoto',ev.target.result);};r.readAsDataURL(f);}});
+
+function goBackOriginal(){if(confirm('Go back to homepage?')) window.location.href='index.html';}
+
+document.getElementById('startTestBtn').addEventListener('click',function(){
+  let n=document.getElementById('modalName').value.trim();
+  let d=document.getElementById('modalDob').value;
+  if(!n||!d){alert('Please fill in all fields');return;}
+  sessionStorage.setItem('candidateName',n);
+  sessionStorage.setItem('candidateDob',d.split('-').reverse().join('/'));
+  document.getElementById('registerModal').style.display='none';
+  initMaxScores();
+  startTimer(1);
+});
+
+function initMaxScores(){
+  maxRawLang=0; maxRawListening=0;
+  document.querySelectorAll('#section1 .question-block, #section2 .question-block').forEach(b=>maxRawLang+=parseFloat(b.dataset.points));
+  document.querySelectorAll('#section3 .question-block').forEach(b=>maxRawListening+=parseFloat(b.dataset.points));
+}
+
+function startTimer(s){
+  if(timers[s-1])clearInterval(timers[s-1]);
+  timers[s-1]=setInterval(()=>{
+    if(timeLeft[s-1]<=0){clearInterval(timers[s-1]); alert('Section '+s+' time up'); endSection(s); return;}
+    timeLeft[s-1]--;
+    if(s===currentSection)updateTimerDisplay(s);
+  },1000);
+}
+
+function updateTimerDisplay(s){ let m=Math.floor(timeLeft[s-1]/60),sec=timeLeft[s-1]%60; document.getElementById('timerDisplay').innerText=m.toString().padStart(2,'0')+':'+sec.toString().padStart(2,'0'); if(timeLeft[s-1]<=300)document.getElementById('sectionTimer').classList.add('warning'); }
+
+function switchToSection(s){
+  if(s>currentSection&&!sectionsCompleted[s-2]){alert('Please complete previous section first'); return;}
+  document.querySelectorAll('.section-container').forEach(el=>el.classList.remove('active'));
+  document.getElementById('section'+s).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
+  document.getElementById('section'+s+'Btn').classList.add('active');
+  currentSection=s;
+  updateTimerDisplay(s);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function endSection(s){
+  if(sectionsCompleted[s-1])return;
+  clearInterval(timers[s-1]);
+  sectionsCompleted[s-1]=true;
+  let btn=document.getElementById('section'+s+'Btn');
+  btn.classList.add('completed'); btn.disabled=true;
+  if(s<3){ 
+    restPendingSection = s+1;
+    document.getElementById('restOverlay').classList.add('show');
+    let restTime = 30 * 60;
+    let restInterval = setInterval(() => {
+      let m = Math.floor(restTime / 60);
+      let sec = restTime % 60;
+      document.querySelector('.rest-time').innerText = m.toString().padStart(2,'0') + ':' + sec.toString().padStart(2,'0');
+      restTime--;
+      if(restTime < 0) { clearInterval(restInterval); document.querySelector('.rest-time').innerText = '00:00'; }
+    }, 1000);
+  }
+  if(sectionsCompleted.every(v=>v===true)) calculateResults();
+}
+
+document.getElementById('restStartBtn').addEventListener('click', function() {
+  document.getElementById('restOverlay').classList.remove('show');
+  if(restPendingSection) {
+    document.getElementById('section'+restPendingSection+'Btn').disabled = false;
+    startTimer(restPendingSection);
+    switchToSection(restPendingSection);
+    restPendingSection = null;
+  }
+});
+
+function toggleExplanation(btn){ let c=btn.closest('.question-block').querySelector('.explanation-content'); c.classList.toggle('expanded'); btn.innerHTML=c.classList.contains('expanded')?'📚 閉じる':'📚 説明 (Explanation)'; }
+function toggleKotoba(btn){ let c=btn.closest('.question-block').querySelector('.kotoba-content'); c.classList.toggle('expanded'); btn.innerHTML=c.classList.contains('expanded')?'📝 閉じる':'📝 言葉ノート (Kotoba Note)'; }
+function markAnswered(qid){ let section=currentSection; let val=document.querySelector('input[name="q'+qid+'"]:checked'); if(val)userAnswers[section][qid]=val.value; }
+
+function calculateResults(){
+  document.querySelector('.loading').style.display='block';
+  setTimeout(()=>{
+    let rawLang=0,rawListening=0;
+    document.querySelectorAll('#section1 .question-block, #section2 .question-block').forEach(b=>{
+      let qid=parseInt(b.dataset.qid); let correct=b.dataset.correct; let selected=null;
+      if(qid<=5)selected=userAnswers[1][qid]; else selected=userAnswers[2][qid];
+      if(selected&&selected===correct)rawLang+=parseFloat(b.dataset.points);
+    });
+    document.querySelectorAll('#section3 .question-block').forEach(b=>{
+      let qid=parseInt(b.dataset.qid); let correct=b.dataset.correct; let selected=userAnswers[3][qid];
+      if(selected&&selected===correct)rawListening+=parseFloat(b.dataset.points);
+    });
+    let scaledLang=Math.round((rawLang/maxRawLang)*120)||0;
+    let scaledListening=Math.round((rawListening/maxRawListening)*60)||0;
+    let total=scaledLang+scaledListening;
+    let passLang=scaledLang>=38, passListen=scaledListening>=19, passTotal=total>=90;
+    let overall=passLang&&passListen&&passTotal;
+    let photo=sessionStorage.getItem('candidatePhoto'); if(photo)document.getElementById('resultPhoto').src=photo;
+    document.getElementById('reportName').innerText=sessionStorage.getItem('candidateName')||'Shine Gyi';
+    document.getElementById('reportDob').innerText=sessionStorage.getItem('candidateDob')||'15/05/1995';
+    document.getElementById('reportId').innerText='N4-'+Math.floor(Math.random()*10000);
+    document.getElementById('reportDate').innerText=new Date().toLocaleDateString();
+    document.getElementById('languageScore').innerText=scaledLang+'/120';
+    document.getElementById('languageStatus').innerText=passLang?'PASS':'FAIL';
+    document.getElementById('listeningScore').innerText=scaledListening+'/60';
+    document.getElementById('listeningStatus').innerText=passListen?'PASS':'FAIL';
+    document.getElementById('totalScore').innerText=total+'/180';
+    document.getElementById('totalStatus').innerText=passTotal?'PASS':'FAIL';
+    let jb=document.getElementById('judgmentBox');
+    if(overall){jb.className='judgment-box pass'; document.getElementById('judgmentText').innerText='PASSED'; document.getElementById('judgmentSub').innerText='合格おめでとうございます！';}
+    else{jb.className='judgment-box fail'; document.getElementById('judgmentText').innerText='FAILED'; let r=[]; if(!passLang)r.push('言語知識 (38点未満)'); if(!passListen)r.push('聴解 (19点未満)'); if(!passTotal)r.push('総合得点 (90点未満)'); document.getElementById('judgmentSub').innerText='不合格: '+r.join(', ');}
+    document.getElementById('resultsCard').style.display='block';
+    document.querySelector('.review-btn').classList.add('visible');
+    document.querySelectorAll('.action-btn').forEach(btn=>btn.classList.add('visible'));
+    document.querySelector('.loading').style.display='none';
+    document.getElementById('resultsCard').scrollIntoView({behavior:'smooth'});
+  },1500);
+}
+
+function reviewAnswers(){
+  isReviewMode = true;
+  let playBtn = document.getElementById('playOnlyBtn');
+  let pauseBtn = document.getElementById('pauseBtn');
+  let seekSlider = document.getElementById('seekSlider');
+  if(playBtn) playBtn.style.display = 'none';
+  if(pauseBtn) { pauseBtn.style.display = 'inline-flex'; pauseBtn.onclick = () => { if(audioEl) audioEl.pause(); }; }
+  if(seekSlider) { seekSlider.style.display = 'inline-block'; seekSlider.oninput = () => { if(audioEl) audioEl.currentTime = seekSlider.value; }; }
+  document.querySelectorAll('.option-label').forEach(l=>l.classList.remove('correct-highlight','wrong-highlight'));
+  document.querySelectorAll('.question-block').forEach(block=>{
+    let cv=parseInt(block.dataset.correct);
+    block.querySelectorAll('input[type="radio"]').forEach(radio=>{
+      let lb=radio.parentElement;
+      if(radio.checked){ if(parseInt(radio.value)===cv)lb.classList.add('correct-highlight'); else lb.classList.add('wrong-highlight'); }
+      if(parseInt(radio.value)===cv)lb.classList.add('correct-highlight');
+    });
+  });
+  document.querySelectorAll('.section-container').forEach(s=>s.style.display='block');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function initListeningPlayer() {
+  audioEl = document.getElementById('listeningMainAudio');
+  if(!audioEl) return;
+  let playBtn = document.getElementById('playOnlyBtn');
+  let pauseBtn = document.getElementById('pauseBtn');
+  let seekSlider = document.getElementById('seekSlider');
+  let timeDisplay = document.getElementById('timeDisplay');
+  audioEl.addEventListener('loadedmetadata', ()=>{ if(seekSlider) seekSlider.max = audioEl.duration; if(timeDisplay) timeDisplay.innerText = formatTime(0) + " / " + formatTime(audioEl.duration); });
+  audioEl.addEventListener('timeupdate', ()=>{ if(seekSlider) seekSlider.value = audioEl.currentTime; if(timeDisplay) timeDisplay.innerText = formatTime(audioEl.currentTime) + " / " + formatTime(audioEl.duration); });
+  if(playBtn) {
+    playBtn.onclick = () => {
+      if(!isReviewMode && hasPlayedListening) {
+        alert("စာဖြေချိန်အတွင်း တစ်ကြိမ်သာ နားထောင်ခွင့်ရှိပါသည်။ Review Answers နှိပ်ပြီးမှ ပြန်နားထောင်နိုင်ပါသည်။");
+        return;
+      }
+      if(audioEl) { audioEl.play(); if(!isReviewMode) hasPlayedListening = true; }
+    };
+  }
+}
+
+window.markAnswered=markAnswered;
+window.toggleExplanation=toggleExplanation;
+window.toggleKotoba=toggleKotoba;
+window.switchToSection=switchToSection;
+window.endSection=endSection;
+window.reviewAnswers=reviewAnswers;
+window.goBack=goBackOriginal;
+<\/script>
+</body>
+</html>`;
+    document.getElementById('codePreview').innerText = finalHtml;
+    let totalQ = sectionsData.reduce((a,sec)=> a + sec.mondais.reduce((b,m)=> b + m.questions.length,0),0);
+    document.getElementById('liveStat').innerHTML = `Sections: ${sectionsData.length} | Questions: ${totalQ}`;
+  }
+
+  function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  // ========== EXPORT / IMPORT FUNCTIONS ==========
+  function exportData() {
+    let data = JSON.stringify(sectionsData, null, 2);
+    let blob = new Blob([data], {type: 'application/json'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'jlpt_n4_data_backup.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function importData(file) {
+    let reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        let data = JSON.parse(e.target.result);
+        if (Array.isArray(data) && data.length > 0) {
+          sectionsData = data;
+          renumberAllQids();
+          renderEditor();
+          alert('✅ Data imported successfully!');
+        } else {
+          alert('❌ Invalid data format!');
+        }
+      } catch(err) {
+        alert('❌ Error reading file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  document.getElementById('exportDataBtn').addEventListener('click', exportData);
+  document.getElementById('importDataBtn').addEventListener('click', function() {
+    document.getElementById('importFileInput').click();
+  });
+  document.getElementById('importFileInput').addEventListener('change', function(e) {
+    if (this.files.length > 0) {
+      importData(this.files[0]);
+    }
+    this.value = '';
+  });
+
+  document.getElementById('addSectionBtn').onclick = () => addNewSection();
+  document.getElementById('resetOriginalBtn').onclick = () => { sectionsData = getOriginalData(); renderEditor(); };
+  document.getElementById('downloadHtmlBtn').onclick = () => {
+    let html = document.getElementById('codePreview').innerText;
+    let blob = new Blob([html], {type: 'text/html'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'jlpt_n4_kotoba_note.html';
+    a.click();
+  };
+
+  sectionsData = getOriginalData();
+  renderEditor();
+</script>
+</body>
+</html>
